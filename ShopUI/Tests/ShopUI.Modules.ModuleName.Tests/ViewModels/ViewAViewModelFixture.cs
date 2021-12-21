@@ -1,8 +1,5 @@
 ﻿using Moq;
-using Prism.Regions;
-using ShopUI.Modules.ModuleName.ViewModels;
 using ShopUI.Services.Interfaces;
-using Xunit;
 
 namespace ShopUI.Modules.ModuleName.Tests.ViewModels
 {

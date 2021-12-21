@@ -1,8 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
-using ShopUI.Modules.ModuleName;
-using ShopUI.Services;
-using ShopUI.Services.Interfaces;
+using ShopUI.Modules.NotificationTools;
+using ShopUI.Modules.Products;
 using ShopUI.Views;
 using System.Windows;
 
@@ -20,12 +19,13 @@ namespace ShopUI
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IMessageService, MessageService>();
+
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             moduleCatalog.AddModule<ProductsModule>();
+            moduleCatalog.AddModule<NotificationToolsModule>();
         }
     }
 }

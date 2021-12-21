@@ -9,8 +9,9 @@
     <PackageReference Include="Prism.DryIoc" Version="8.0.0.1909" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Modules\ShopUI.Modules.NotificationTools\ShopUI.Modules.NotificationTools.csproj" />
     <ProjectReference Include="..\ShopUI.Core\ShopUI.Core.csproj" />
-    <ProjectReference Include="..\Modules\ShopUI.Modules.ModuleName\ShopUI.Modules.Products.csproj" />
+    <ProjectReference Include="..\Modules\ShopUI.Modules.Products\ShopUI.Modules.Products.csproj" />
     <ProjectReference Include="..\Services\ShopUI.Services.Interfaces\ShopUI.Services.Interfaces.csproj" />
     <ProjectReference Include="..\Services\ShopUI.Services\ShopUI.Services.csproj" />
   </ItemGroup>

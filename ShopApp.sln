@@ -12,19 +12,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopUI", "ShopUI\ShopUI\ShopUI.csproj", "{E956AD76-7B94-47AF-ADAA-18025CB4DF0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopUI", "ShopUI\ShopUI\ShopUI.csproj", "{E956AD76-7B94-47AF-ADAA-18025CB4DF0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopUI.Core", "ShopUI\ShopUI.Core\ShopUI.Core.csproj", "{4E10AB74-ED56-44E1-B2FC-A4F47FAD0EB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopUI.Core", "ShopUI\ShopUI.Core\ShopUI.Core.csproj", "{4E10AB74-ED56-44E1-B2FC-A4F47FAD0EB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopUI.Modules.Products", "ShopUI\Modules\ShopUI.Modules.ModuleName\ShopUI.Modules.Products.csproj", "{969CF6DF-1A63-440F-BF1E-45377A39A77A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopUI.Services", "ShopUI\Services\ShopUI.Services\ShopUI.Services.csproj", "{BB74D71D-E606-44A9-B534-9B68598B3926}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopUI.Services", "ShopUI\Services\ShopUI.Services\ShopUI.Services.csproj", "{BB74D71D-E606-44A9-B534-9B68598B3926}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopUI.Services.Interfaces", "ShopUI\Services\ShopUI.Services.Interfaces\ShopUI.Services.Interfaces.csproj", "{5CAF4EA7-E3A8-4143-AB9E-8B1BCE66F392}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopUI.Modules.ModuleName.Tests", "ShopUI\Tests\ShopUI.Modules.ModuleName.Tests\ShopUI.Modules.ModuleName.Tests.csproj", "{23C70507-021C-4A26-B542-EAD877A401A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopUI.Services.Interfaces", "ShopUI\Services\ShopUI.Services.Interfaces\ShopUI.Services.Interfaces.csproj", "{5CAF4EA7-E3A8-4143-AB9E-8B1BCE66F392}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{23ED0C10-0D1D-4A6F-A635-D2BEF7B9AC1A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopUI.Modules.Products", "ShopUI\Modules\ShopUI.Modules.Products\ShopUI.Modules.Products.csproj", "{3A3FE71C-B61A-4BCA-819B-94BB0BC3954B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopUI.Modules.NotificationTools", "ShopUI\Modules\ShopUI.Modules.NotificationTools\ShopUI.Modules.NotificationTools.csproj", "{85C17E99-7C56-44AD-B0DA-AC64408FE840}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,10 +48,6 @@ Global
 		{4E10AB74-ED56-44E1-B2FC-A4F47FAD0EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E10AB74-ED56-44E1-B2FC-A4F47FAD0EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E10AB74-ED56-44E1-B2FC-A4F47FAD0EB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{969CF6DF-1A63-440F-BF1E-45377A39A77A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{969CF6DF-1A63-440F-BF1E-45377A39A77A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{969CF6DF-1A63-440F-BF1E-45377A39A77A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{969CF6DF-1A63-440F-BF1E-45377A39A77A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BB74D71D-E606-44A9-B534-9B68598B3926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BB74D71D-E606-44A9-B534-9B68598B3926}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB74D71D-E606-44A9-B534-9B68598B3926}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,16 +56,21 @@ Global
 		{5CAF4EA7-E3A8-4143-AB9E-8B1BCE66F392}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CAF4EA7-E3A8-4143-AB9E-8B1BCE66F392}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CAF4EA7-E3A8-4143-AB9E-8B1BCE66F392}.Release|Any CPU.Build.0 = Release|Any CPU
-		{23C70507-021C-4A26-B542-EAD877A401A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23C70507-021C-4A26-B542-EAD877A401A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23C70507-021C-4A26-B542-EAD877A401A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23C70507-021C-4A26-B542-EAD877A401A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A3FE71C-B61A-4BCA-819B-94BB0BC3954B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A3FE71C-B61A-4BCA-819B-94BB0BC3954B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A3FE71C-B61A-4BCA-819B-94BB0BC3954B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A3FE71C-B61A-4BCA-819B-94BB0BC3954B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C17E99-7C56-44AD-B0DA-AC64408FE840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85C17E99-7C56-44AD-B0DA-AC64408FE840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85C17E99-7C56-44AD-B0DA-AC64408FE840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85C17E99-7C56-44AD-B0DA-AC64408FE840}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{969CF6DF-1A63-440F-BF1E-45377A39A77A} = {23ED0C10-0D1D-4A6F-A635-D2BEF7B9AC1A}
+		{3A3FE71C-B61A-4BCA-819B-94BB0BC3954B} = {23ED0C10-0D1D-4A6F-A635-D2BEF7B9AC1A}
+		{85C17E99-7C56-44AD-B0DA-AC64408FE840} = {23ED0C10-0D1D-4A6F-A635-D2BEF7B9AC1A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE1640B6-B567-45F3-B5BC-2371F69773A3}

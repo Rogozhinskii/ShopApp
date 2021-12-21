@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules\ShopUI.Modules.ModuleName\ShopUI.Modules.Products.csproj" />
+    <ProjectReference Include="..\..\Modules\ShopUI.Modules.Products.csproj" />
   </ItemGroup>
 
 </Project>

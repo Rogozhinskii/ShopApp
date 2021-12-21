@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ShopUI.Modules.ModuleName.Views
+namespace ShopUI.Modules.Products.Views
 {
     /// <summary>
-    /// Interaction logic for ViewA.xaml
+    /// Логика взаимодействия для ProductsView.xaml
     /// </summary>
-    public partial class ViewA : UserControl
+    public partial class ProductsView : UserControl
     {
-        public ViewA()
+        public ProductsView()
         {
             InitializeComponent();
         }

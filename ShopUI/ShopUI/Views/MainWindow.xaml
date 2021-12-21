@@ -4,8 +4,14 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:core="clr-namespace:ShopUI.Core;assembly=ShopUI.Core"
+        
         Title="{Binding Title}" Height="350" Width="525" >
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ContentRegion}" />
+        <TabControl>
+            <TabItem Header="Продукты" IsSelected="{Binding IsProductsTabSelected, Mode=TwoWay}">
+                <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ProductsRegion}" />
+            </TabItem>
+        </TabControl>
+            
     </Grid>
 </Window>
