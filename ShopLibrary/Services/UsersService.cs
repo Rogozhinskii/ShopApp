@@ -1,21 +1,19 @@
 ﻿using ShopLibrary.DAL;
+using ShopLibrary.DAO.interfaces;
 using ShopLibrary.Models;
+using ShopLibrary.Services.Interfaces;
 using System.Data.Common;
 
 namespace ShopLibrary.Services
 {
-    public class UsersService
+    public class UsersService: IUsersService
     {
-        private readonly UsersDAL _usersDAL;
+        private readonly IRepository<User> _usersRepository;
 
-        public UsersService()
-        {
-
-        }
-        public UsersService(string provider,string connectionString)
-        {
-            var factory=DbProviderFactories.GetFactory(provider);
-            _usersDAL = new UsersDAL(factory,connectionString);
+       
+        public UsersService(DbProviderFactory factory,string connectionString)
+        {            
+            _usersRepository = new UsersRepository(factory,connectionString);
         }
 
         public bool IsUserRegistered(string userName)
@@ -26,12 +24,12 @@ namespace ShopLibrary.Services
 
         public User GetUserByUserName(string userName)
         {
-            return _usersDAL.GetUserByUserName(userName);
+            return _usersRepository.Find(userName);
         }
 
-        public bool Insert(User newUser)
+        public bool AddNewUser(User newUser)
         {
-            return _usersDAL.Insert(newUser);
+            return _usersRepository.Insert(newUser);
         }
     }
 }

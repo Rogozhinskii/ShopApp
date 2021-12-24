@@ -1,15 +1,16 @@
-﻿using ShopLibrary.DAL;
+﻿using ShopLibrary.Authentication.Interfaces;
 using ShopLibrary.Models;
 using ShopLibrary.Services;
+using ShopLibrary.Services.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace ShopLibrary.Authentication
 {
-    public class Protector
+    public class Protector: IProtector
     {
-        private readonly UsersService _usersService;
-        public Protector(UsersService usersService)
+        private readonly IUsersService _usersService;
+        public Protector(IUsersService usersService)
         {
             _usersService = usersService;
         }
@@ -29,7 +30,7 @@ namespace ShopLibrary.Authentication
                 Salt = saltText,
                 SaltedHashedPassword = saltedhashedPassword,
             };
-            return _usersService.Insert(newUser);
+            return _usersService.AddNewUser(newUser);
         }
 
         public bool LogIn(string userName,string password)

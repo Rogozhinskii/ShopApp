@@ -5,13 +5,13 @@ using System.Data.Common;
 
 namespace ShopLibrary.DAL
 {
-    internal class UsersDAL : DAL<User>
+    internal class UsersRepository : IRepository<User>
     {
         private readonly DbProviderFactory _providerFactory;
         private readonly string _conectionString;
         private IDbConnection _connection;
 
-        public UsersDAL(DbProviderFactory factory,string connectionString)
+        public UsersRepository(DbProviderFactory factory,string connectionString)
         {
             _providerFactory = factory ?? throw new ArgumentNullException(nameof(factory));
             _conectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
@@ -52,9 +52,10 @@ namespace ShopLibrary.DAL
             return parameter;
         }
 
-        public User GetUserByUserName(string userName)
+        public User Find(object value)
         {
             OpenConnection();
+            string userName=value.ToString();
             User user=new();
             string sqlCommand = $"Select * from {TableNames.UserTable} where userName=@userName";
             using (var cmd = GetCommand())
@@ -73,16 +74,13 @@ namespace ShopLibrary.DAL
                             SaltedHashedPassword = reader["saltedHashedPassword"].ToString()
                         };
                        
-                    }
-                    
+                    }                    
                 }
-                catch (Exception)
-                {
+                catch (Exception){
 
                     throw;
                 }
-                finally
-                {
+                finally{
                     CloseConnection();
                 }
 

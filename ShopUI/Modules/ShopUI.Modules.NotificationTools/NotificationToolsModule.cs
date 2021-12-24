@@ -1,6 +1,5 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
 using ShopUI.Modules.NotificationTools.ViewModels;
 using ShopUI.Modules.NotificationTools.Views;
 

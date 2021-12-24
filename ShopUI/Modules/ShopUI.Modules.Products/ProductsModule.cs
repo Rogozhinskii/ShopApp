@@ -1,8 +1,6 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using Prism.Services.Dialogs;
-using ShopUI.Core;
 using ShopUI.Modules.Products.Views;
 
 namespace ShopUI.Modules.Products

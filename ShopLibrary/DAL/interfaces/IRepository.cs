@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ShopLibrary.DAO.interfaces
+﻿namespace ShopLibrary.DAO.interfaces
 {
-    public interface DAL<T>
+    public interface IRepository<T>
     {
         public T GetById(int id);
+        public T Find(object value);
         public List<T> GetAll();
         public bool Update(T entity);
         public bool Delete(int id);

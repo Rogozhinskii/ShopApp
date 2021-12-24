@@ -1,5 +1,5 @@
 ﻿using Prism.Services.Dialogs;
-using ShopUI.Core.Mvvm;
+using ShopUI.Core.MVVM;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {

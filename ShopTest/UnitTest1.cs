@@ -17,37 +17,37 @@ namespace ShopTest
         [TestMethod]
         public void RegisterTest()
         {
-            SqlConnectionStringBuilder connectionString = new()
-            {
-                DataSource = @"(localdb)\mssqllocaldb",
-                InitialCatalog = "ShopDb",
-                IntegratedSecurity = true,
-                Pooling = true
-            };
-            string providerName = "System.Data.SqlClient";
-            DbProviderFactories.RegisterFactory(providerName, SqlClientFactory.Instance);
-            UsersService usersService = new UsersService(providerName, connectionString.ToString());
-            Protector protector = new(usersService);
-            var result = protector.Register("Admin", "Admin");
-            Assert.IsTrue(result);
+            //SqlConnectionStringBuilder connectionString = new()
+            //{
+            //    DataSource = @"(localdb)\mssqllocaldb",
+            //    InitialCatalog = "ShopDb",
+            //    IntegratedSecurity = true,
+            //    Pooling = true
+            //};
+            //string providerName = "System.Data.SqlClient";
+            //DbProviderFactories.RegisterFactory(providerName, SqlClientFactory.Instance);
+            //UsersService usersService = new UsersService(providerName, connectionString.ToString());
+            //Protector protector = new(usersService);
+            //var result = protector.Register("Admin", "Admin");
+            //Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void LogInTest()
         {
-            SqlConnectionStringBuilder connectionString = new()
-            {
-                DataSource = @"(localdb)\mssqllocaldb",
-                InitialCatalog = "ShopDb",
-                IntegratedSecurity = true,
-                Pooling = true
-            };
-            string providerName = "System.Data.SqlClient";
-            DbProviderFactories.RegisterFactory(providerName, SqlClientFactory.Instance);
-            UsersService usersService = new UsersService(providerName, connectionString.ToString());
-            Protector protector = new(usersService);
-            var result = protector.LogIn("Admin", "Admin");
-            Assert.IsTrue(result);
+            //SqlConnectionStringBuilder connectionString = new()
+            //{
+            //    DataSource = @"(localdb)\mssqllocaldb",
+            //    InitialCatalog = "ShopDb",
+            //    IntegratedSecurity = true,
+            //    Pooling = true
+            //};
+            //string providerName = "System.Data.SqlClient";
+            //DbProviderFactories.RegisterFactory(providerName, SqlClientFactory.Instance);
+            //UsersService usersService = new UsersService(providerName, connectionString.ToString());
+            //Protector protector = new(usersService);
+            //var result = protector.LogIn("Admin", "Admin");
+            //Assert.IsTrue(result);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@ namespace ShopTest
         [TestMethod]
         public void ProductsTest()
         {
-            ProductsDAL productsDAL = new();
+            
         }
     }
 }

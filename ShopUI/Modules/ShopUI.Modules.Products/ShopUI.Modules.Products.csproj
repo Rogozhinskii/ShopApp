@@ -5,10 +5,9 @@
     <AssemblyName>ShopUI.Modules.ModuleName</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.Wpf" Version="8.0.0.1909" />
+    <PackageReference Include="Prism.Core" Version="8.1.97" />    
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ShopUI.Core\ShopUI.Core.csproj" />
-    <ProjectReference Include="..\..\Services\ShopUI.Services.Interfaces\ShopUI.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\..\..\ShopUI.Core\ShopUI.Core.csproj" />
   </ItemGroup>
 </Project>

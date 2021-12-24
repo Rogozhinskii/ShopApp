@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShopUI.Core
 {
-    public class ViewNames
+    public static class ViewNames
     {
         public const string ProductsView = "ProductsView";
     }
