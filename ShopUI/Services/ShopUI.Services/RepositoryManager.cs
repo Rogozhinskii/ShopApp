@@ -1,4 +1,7 @@
-﻿using ShopLibrary.Services;
+﻿using ShopLibrary.DAL.Repositories;
+using ShopLibrary.DAO.interfaces;
+using ShopLibrary.Models;
+using ShopLibrary.Services;
 using ShopLibrary.Services.Interfaces;
 using ShopUI.Core;
 using ShopUI.Services.Interfaces;
@@ -11,9 +14,15 @@ namespace ShopUI.Services
         public IUsersService _usersService;
         public IUsersService UsersService => _usersService;
 
-        public RepositoryManager(IProviderFactoryService providerFactoryService,ConnectionStringSettings connectionSettings)
+        private readonly IRepository<Customer> _customersRepository;
+        public IRepository<Customer> CustomersRepository => _customersRepository;
+
+        public RepositoryManager(IProviderFactoryService providerFactoryService,ConnectionStringSettingsCollection connectionStringCollections)
         {
-            _usersService = new UsersService(providerFactoryService.GetFactory(connectionSettings.ProviderName), connectionSettings.ConnectionString);
+            var sqlConnection = connectionStringCollections[ConnectionStringNames.sqlConnection];
+            _usersService = new UsersService(providerFactoryService.GetFactory(sqlConnection.ProviderName), sqlConnection.ConnectionString);
+            _customersRepository = new CustomersRepository(providerFactoryService.GetFactory(sqlConnection.ProviderName), sqlConnection.ConnectionString);
+
         }
     }
 }

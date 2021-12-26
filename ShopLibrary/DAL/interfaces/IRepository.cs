@@ -1,4 +1,5 @@
-﻿namespace ShopLibrary.DAO.interfaces
+﻿
+namespace ShopLibrary.DAO.interfaces
 {
     public interface IRepository<T>
     {

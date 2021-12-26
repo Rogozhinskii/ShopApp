@@ -28,9 +28,9 @@ namespace ShopUI
         {
             if (containerRegistry != null)
             {
-                var providersService = new ProviderFactoryService();
-                var sqlConnectionSettings = ConfigurationManager.ConnectionStrings[ConnectionStringNames.sqlConnection];               
-                var repositoryManager = new RepositoryManager(providersService, sqlConnectionSettings);
+                var providersService = new ProviderFactoryService();                               
+                var connectionStrings = ConfigurationManager.ConnectionStrings;               
+                var repositoryManager = new RepositoryManager(providersService, connectionStrings);
                 containerRegistry.RegisterInstance<IProviderFactoryService>(providersService);
                 containerRegistry.RegisterInstance<IRepositoryManager>(repositoryManager);
                 containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();

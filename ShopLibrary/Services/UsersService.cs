@@ -1,4 +1,4 @@
-﻿using ShopLibrary.DAL;
+﻿using ShopLibrary.DAL.Repositories;
 using ShopLibrary.DAO.interfaces;
 using ShopLibrary.Models;
 using ShopLibrary.Services.Interfaces;
@@ -8,11 +8,12 @@ namespace ShopLibrary.Services
 {
     public class UsersService: IUsersService
     {
-        private readonly IRepository<User> _usersRepository;
+        private readonly Repository<User> _usersRepository;
 
        
         public UsersService(DbProviderFactory factory,string connectionString)
         {            
+            //_usersRepository = new UsersRepository(factory,connectionString);
             _usersRepository = new UsersRepository(factory,connectionString);
         }
 

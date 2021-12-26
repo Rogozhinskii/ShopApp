@@ -17,7 +17,8 @@ namespace ShopUI.Services
         }
         public Task<bool> LogIn(string userName, SecureString password)
         {
-            return Task.Run(() => { return _protector.LogIn(userName, password); });
+            return Task.Run(() => { return 
+                _protector.LogIn(userName, password); });
         }
 
         public Task<bool> Register(string userName, SecureString password)

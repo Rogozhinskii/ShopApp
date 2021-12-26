@@ -1,58 +1,17 @@
-﻿using ShopLibrary.DAO.interfaces;
-using ShopLibrary.Models;
+﻿using ShopLibrary.Models;
 using System.Data;
 using System.Data.Common;
 
-namespace ShopLibrary.DAL
+namespace ShopLibrary.DAL.Repositories
 {
-    internal class UsersRepository : IRepository<User>
+    public class UsersRepository : Repository<User>
     {
-        private readonly DbProviderFactory _providerFactory;
-        private readonly string _conectionString;
-        private IDbConnection _connection;
-
-        public UsersRepository(DbProviderFactory factory,string connectionString)
-        {
-            _providerFactory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _conectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
-        }
-
-        private void OpenConnection()
-        {
-            if(_conectionString == null ||_connection is null || _connection.State == ConnectionState.Closed)
-            {
-                _connection=_providerFactory.CreateConnection();
-                if(_connection==null)
-                    throw new ArgumentNullException(nameof(_connection));
-                _connection.ConnectionString = _conectionString;
-                _connection.Open();
-            }
-        }
-
-        private IDbCommand GetCommand()
-        {
-            IDbCommand cmd =_providerFactory.CreateCommand();
-            cmd.Connection = _connection;
-            return cmd;
-        }
-
-        private void CloseConnection() 
-        { 
-            if(_connection.State != ConnectionState.Closed)
-                _connection.Close();
-        }
+        public UsersRepository(DbProviderFactory factory, string connectionString)
+            : base(factory, connectionString) { }
 
        
-        private IDataParameter GetParameter(string paramName,DbType dbType,object value)
-        {
-            IDataParameter parameter = _providerFactory.CreateParameter();
-            parameter.ParameterName = $"@{paramName}";
-            parameter.DbType = dbType;
-            parameter.Value = value;
-            return parameter;
-        }
 
-        public User Find(object value)
+        public override User Find(object value)
         {
             OpenConnection();
             string userName=value.ToString();
@@ -68,7 +27,7 @@ namespace ShopLibrary.DAL
                     while (reader.Read())
                     {
                         user = new()
-                        {
+                        {                            
                             Name = reader["userName"].ToString(),
                             Salt = reader["salt"].ToString(),
                             SaltedHashedPassword = reader["saltedHashedPassword"].ToString()
@@ -88,22 +47,9 @@ namespace ShopLibrary.DAL
             return user;
         }
 
-        public bool Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        public List<User> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public User GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Insert(User entity)
+        public override bool Insert(User entity)
         {
             OpenConnection();
             string sql = $"Insert Into {TableNames.UserTable} (userName,salt,saltedHashedPassword)" +
@@ -128,13 +74,7 @@ namespace ShopLibrary.DAL
             return false;
         }
 
-        public bool Update(User entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        
-        public bool InsertMany(IEnumerable<User> entities)
+        public override bool InsertMany(IEnumerable<User> entities)
         {
             bool result = false;
             foreach (User item in entities)
