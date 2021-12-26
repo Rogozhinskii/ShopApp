@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopUI.Core
+namespace ShopLibrary.DAL
 {
-    public static class ViewNames
+    internal class CustomersRepository:IRepository<Customers>
     {
-        public const string ProductsView = "ProductsView";
     }
 }

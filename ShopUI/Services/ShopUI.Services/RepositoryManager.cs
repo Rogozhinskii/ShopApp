@@ -2,17 +2,18 @@
 using ShopLibrary.Services.Interfaces;
 using ShopUI.Core;
 using ShopUI.Services.Interfaces;
+using System.Configuration;
 
 namespace ShopUI.Services
 {
-    internal class RepositoryManager : IRepositoryManager
+    public class RepositoryManager : IRepositoryManager
     {
         public IUsersService _usersService;
         public IUsersService UsersService => _usersService;
 
-        public RepositoryManager(IProviderFactoryService providerFactoryService)
+        public RepositoryManager(IProviderFactoryService providerFactoryService,ConnectionStringSettings connectionSettings)
         {
-            _usersService = new UsersService(providerFactoryService.SqlFactory,ConnectionStringNames.sqlConnection);
+            _usersService = new UsersService(providerFactoryService.GetFactory(connectionSettings.ProviderName), connectionSettings.ConnectionString);
         }
     }
 }

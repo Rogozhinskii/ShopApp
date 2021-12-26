@@ -119,15 +119,10 @@ namespace ShopLibrary.DAL
                     if (query != 0)
                         return true;
                 }               
-                catch (Exception)
-                {
-                    return false;
-                }
-                finally
-                {
+                catch (Exception ex){
                     CloseConnection();
+                    throw new InvalidOperationException($"Can`t insert data to DB. Object",ex.InnerException);                   
                 }
-               
             }
 
             return false;
@@ -136,6 +131,19 @@ namespace ShopLibrary.DAL
         public bool Update(User entity)
         {
             throw new NotImplementedException();
+        }
+
+        
+        public bool InsertMany(IEnumerable<User> entities)
+        {
+            bool result = false;
+            foreach (User item in entities)
+            {
+                result=Insert(item);
+                if (!result)
+                    throw new InvalidOperationException($"Can`t insert data to DB. Object {item.Name}");
+            }
+            return result;
         }
     }
 }

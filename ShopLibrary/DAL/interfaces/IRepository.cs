@@ -8,6 +8,7 @@
         public bool Update(T entity);
         public bool Delete(int id);
         public bool Insert(T entity);
+        public bool InsertMany(IEnumerable<T> entities);
         
     }
 }

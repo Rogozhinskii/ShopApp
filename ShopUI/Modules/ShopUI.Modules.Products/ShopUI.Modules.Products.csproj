@@ -5,6 +5,7 @@
     <AssemblyName>ShopUI.Modules.ModuleName</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />    
   </ItemGroup>
   <ItemGroup>

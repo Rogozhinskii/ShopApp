@@ -7,13 +7,18 @@ using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
 using System.Data.SqlClient;
-
+using System.Text;
 
 namespace ShopTest
 {
     [TestClass]
     public class UnitTest1
     {
+        [TestMethod]
+        public void StringTest()
+        {
+           
+        }
         [TestMethod]
         public void RegisterTest()
         {

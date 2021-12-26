@@ -6,7 +6,7 @@ namespace ShopLibrary.Services.Interfaces
     {
         public DbProviderFactory OleFactory { get; }
         public DbProviderFactory SqlFactory { get; }
-        void RegisterFactory();
         void RegisterFactory(string providerName, DbProviderFactory dbProviderFactory);
+        DbProviderFactory GetFactory(string providerName);
     }
 }

@@ -5,9 +5,12 @@
     <AssemblyName>ShopUI.Modules.NotificationTools</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ShopLibrary\ShopLibrary.csproj" />
     <ProjectReference Include="..\..\..\ShopUI.Core\ShopUI.Core.csproj" />
+    <ProjectReference Include="..\..\Services\ShopUI.Services\ShopUI.Services.csproj" />
   </ItemGroup>
 </Project>

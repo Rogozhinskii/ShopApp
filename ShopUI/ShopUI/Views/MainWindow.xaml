@@ -3,10 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        xmlns:core="clr-namespace:ShopUI.Core;assembly=ShopUI.Core"
-        
-        Title="{Binding Title}" Height="350" Width="525" >
+        xmlns:core="clr-namespace:ShopUI.Core;assembly=ShopUI.Core" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        Title="{Binding Title}" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen">
     <Grid>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Loaded">
+                <prism:InvokeCommandAction Command="{Binding StartApplicationCommand}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
         <TabControl>
             <TabItem Header="Продукты" IsSelected="{Binding IsProductsTabSelected, Mode=TwoWay}">
                 <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ProductsRegion}" />

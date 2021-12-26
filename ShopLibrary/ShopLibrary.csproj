@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Access\" />
+    <Folder Include="BulkImport\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,6 +2,7 @@
 using ShopLibrary.Models;
 using ShopLibrary.Services;
 using ShopLibrary.Services.Interfaces;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace ShopLibrary.Authentication
         {
             _usersService = usersService;
         }
-        public bool Register(string userName,string password)
+        public bool Register(string userName,SecureString password)
         {
             var isRegisters = _usersService.IsUserRegistered(userName);
             if (isRegisters)
@@ -33,7 +34,7 @@ namespace ShopLibrary.Authentication
             return _usersService.AddNewUser(newUser);
         }
 
-        public bool LogIn(string userName,string password)
+        public bool LogIn(string userName,SecureString password)
         {
             var user=_usersService.GetUserByUserName(userName);
             if (user.Name != userName)
@@ -44,10 +45,10 @@ namespace ShopLibrary.Authentication
             return saltedhashedPassword == user.SaltedHashedPassword;
         }
 
-        private static string SaltAndHashPassword(string password, string salt)
+        private static string SaltAndHashPassword(SecureString password, string salt)
         {
             var sha=SHA256.Create();
-            var saltedPasword = password + salt;
+            var saltedPasword = password.GetPasswordAsString() + salt;
             return Convert.ToBase64String(sha.ComputeHash(Encoding.Unicode.GetBytes(saltedPasword)));
 
         }

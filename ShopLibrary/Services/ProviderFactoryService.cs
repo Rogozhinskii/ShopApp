@@ -13,15 +13,25 @@ namespace ShopLibrary.Services
 
         public DbProviderFactory SqlFactory => DbProviderFactories.GetFactory(SQLProvider);
 
+        public ProviderFactoryService()
+        {
+            RegisterFactory();
+        }
+
         public void RegisterFactory(string providerName, DbProviderFactory dbProviderFactory)
         {
             DbProviderFactories.RegisterFactory(providerName, dbProviderFactory);
         }
+
+
 
         public void RegisterFactory()
         {
             DbProviderFactories.RegisterFactory(SQLProvider, SqlClientFactory.Instance);
             DbProviderFactories.RegisterFactory(OleProvider, OleDbFactory.Instance);
         }
+
+        public DbProviderFactory GetFactory(string providerName)=>
+            DbProviderFactories.GetFactory(providerName);
     }
 }

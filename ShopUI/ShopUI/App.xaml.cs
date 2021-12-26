@@ -1,9 +1,13 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
+using ShopLibrary.Authentication.Interfaces;
 using ShopLibrary.Services;
 using ShopLibrary.Services.Interfaces;
+using ShopUI.Core;
 using ShopUI.Modules.NotificationTools;
 using ShopUI.Modules.Products;
+using ShopUI.Services;
+using ShopUI.Services.Interfaces;
 using ShopUI.Views;
 using System.Configuration;
 using System.Windows;
@@ -24,9 +28,12 @@ namespace ShopUI
         {
             if (containerRegistry != null)
             {
-                //var sqlProvide = ConfigurationManager.ConnectionStrings[1];
-                IProviderFactoryService providerFactory = new ProviderFactoryService();
-                
+                var providersService = new ProviderFactoryService();
+                var sqlConnectionSettings = ConfigurationManager.ConnectionStrings[ConnectionStringNames.sqlConnection];               
+                var repositoryManager = new RepositoryManager(providersService, sqlConnectionSettings);
+                containerRegistry.RegisterInstance<IProviderFactoryService>(providersService);
+                containerRegistry.RegisterInstance<IRepositoryManager>(repositoryManager);
+                containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
 
             }
         }
