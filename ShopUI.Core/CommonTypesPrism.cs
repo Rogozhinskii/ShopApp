@@ -2,7 +2,7 @@
 {
     public static class CommonTypesPrism
     {
-        public const string ProductsView = "ProductsView";
+        public const string CustomersView = "CustomersView";
         public const string ErrorNotification = "ErrorNotification";
         public const string AuthenticationDialog = "AuthenticationDialog";
 

@@ -13,12 +13,12 @@ namespace ShopLibrary.DAL.Repositories
 
         public override User Find(object value)
         {
-            OpenConnection();
-            string userName=value.ToString();
-            User user=new();
-            string sqlCommand = $"Select * from {TableNames.UserTable} where userName=@userName";
-            using (var cmd = GetCommand())
-            {
+            User user = new();
+            if (value != null){
+                OpenConnection();
+                string userName = value.ToString();
+                string sqlCommand = $"Select * from {TableNames.UserTable} where userName=@userName";
+                using var cmd = GetCommand();
                 cmd.CommandText = sqlCommand;
                 cmd.Parameters.Add(GetParameter(nameof(userName), DbType.String, userName));
                 try
@@ -27,23 +27,25 @@ namespace ShopLibrary.DAL.Repositories
                     while (reader.Read())
                     {
                         user = new()
-                        {                            
+                        {
                             Name = reader["userName"].ToString(),
                             Salt = reader["salt"].ToString(),
                             SaltedHashedPassword = reader["saltedHashedPassword"].ToString()
                         };
-                       
-                    }                    
+
+                    }
                 }
-                catch (Exception){
+                catch (Exception)
+                {
 
                     throw;
                 }
-                finally{
+                finally
+                {
                     CloseConnection();
                 }
-
             }
+            
             return user;
         }
 

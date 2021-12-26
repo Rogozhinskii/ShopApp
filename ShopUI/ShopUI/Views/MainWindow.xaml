@@ -7,16 +7,23 @@
         Title="{Binding Title}" Height="600" Width="900"
         WindowStartupLocation="CenterScreen">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="Loaded">
                 <prism:InvokeCommandAction Command="{Binding StartApplicationCommand}"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        <TabControl>
+        <TabControl Grid.Row="0">
             <TabItem Header="Продукты" IsSelected="{Binding IsProductsTabSelected, Mode=TwoWay}">
-                <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ProductsRegion}" />
+                <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.CustomersRegion}" />
             </TabItem>
         </TabControl>
+        <Border Grid.Row="1">
+            <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.StatusBarRegion}"/>
+        </Border>
             
     </Grid>
 </Window>

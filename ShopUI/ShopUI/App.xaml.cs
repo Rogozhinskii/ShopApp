@@ -1,9 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
-using ShopLibrary.Authentication.Interfaces;
 using ShopLibrary.Services;
 using ShopLibrary.Services.Interfaces;
-using ShopUI.Core;
 using ShopUI.Modules.NotificationTools;
 using ShopUI.Modules.Products;
 using ShopUI.Services;
@@ -40,7 +38,7 @@ namespace ShopUI
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            moduleCatalog.AddModule<ProductsModule>();
+            moduleCatalog.AddModule<CustomersModule>();
             moduleCatalog.AddModule<NotificationToolsModule>();
         }
     }

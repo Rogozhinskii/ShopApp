@@ -63,6 +63,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             {
                 if (_currentLoginAttemptCount < _maxLoginAttemptCount)
                 {
+                    if (UserName is null || Password is null) return;
                     isSignedIf = await _protector.LogIn(UserName, Password);
                     if (!isSignedIf)
                     {

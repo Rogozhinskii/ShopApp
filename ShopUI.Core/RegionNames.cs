@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ShopUI.Core
+﻿namespace ShopUI.Core
 {
     public static class RegionNames
-    {
-        public const string ContentRegion = "ContentRegion";
-        public const string ProductsRegion = "ProductsRegion";
+    {        
+        public const string CustomersRegion = "CustomersRegion";
+        public const string StatusBarRegion = "StatusBarRegion";
     }
 }

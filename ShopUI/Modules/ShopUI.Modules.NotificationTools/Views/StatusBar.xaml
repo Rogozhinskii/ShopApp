@@ -1,0 +1,14 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             x:Name="userControl" x:Class="ShopUI.Modules.NotificationTools.Views.StatusBar"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             >
+    <ToolBarTray>
+        <ToolBar Style="{DynamicResource MaterialDesignToolBar}" Height="50">
+            <StackPanel VerticalAlignment="Center" Width="200">
+                <ProgressBar IsIndeterminate="True" Visibility="{Binding ProgressBarVisibility}"/>
+            </StackPanel>
+        </ToolBar>
+    </ToolBarTray>
+</UserControl>

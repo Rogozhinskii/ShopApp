@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ShopUI.Modules.Products.Views
+namespace ShopUI.Modules.NotificationTools.Views
 {
     /// <summary>
-    /// Логика взаимодействия для ProductsView.xaml
+    /// Логика взаимодействия для StatusBar.xaml
     /// </summary>
-    public partial class ProductsView : UserControl
+    public partial class StatusBar : UserControl
     {
-        public ProductsView()
+        public StatusBar()
         {
             InitializeComponent();
         }

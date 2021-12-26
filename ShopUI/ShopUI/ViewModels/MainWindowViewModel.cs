@@ -9,7 +9,7 @@ namespace ShopUI.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "Prism Application";
+        private string _title = "Shop App";
         private readonly IRegionManager _regionManager;
         private readonly IDialogService _dialogService;
 
@@ -24,7 +24,12 @@ namespace ShopUI.ViewModels
         public bool IsSignedIn
         {
             get { return _isSignedIn; }
-            set { SetProperty(ref _isSignedIn, value); }
+            set 
+            { 
+                SetProperty(ref _isSignedIn, value); 
+                if (value) 
+                    _regionManager.RequestNavigate(RegionNames.CustomersRegion, CommonTypesPrism.CustomersView); 
+            }
         }
 
 
@@ -32,30 +37,27 @@ namespace ShopUI.ViewModels
         public bool IsProductsTabSelected
         {
             get { return _isProductsTabSelected; }
-            set 
-            { 
-                SetProperty(ref _isProductsTabSelected, value);
-                if (value && IsSignedIn)
-                    _regionManager.RequestNavigate(RegionNames.ProductsRegion,CommonTypesPrism.ProductsView);
-
-            }
+            set {SetProperty(ref _isProductsTabSelected, value);}
         }
+
+         
 
         private DelegateCommand _startApplicationCommand;
 
         public DelegateCommand StartApplicationCommand =>
-           _startApplicationCommand ??= _startApplicationCommand = new DelegateCommand(ExecuteStartApplicationCommand);
+           _startApplicationCommand ??= _startApplicationCommand = new(ExecuteStartApplicationCommand);
 
         void ExecuteStartApplicationCommand()
         {
             _dialogService.ShowDialog(CommonTypesPrism.AuthenticationDialog, null, (result) =>
              {
-                 var res=result.Parameters.GetValue<bool>(CommonTypesPrism.logInResult);
-                 if (res == false)
+                 IsSignedIn = result.Parameters.GetValue<bool>(CommonTypesPrism.logInResult);
+                 if (IsSignedIn == false)
                  {
                      Application.Current.Shutdown();
                  }
              });
+            
         }
 
 

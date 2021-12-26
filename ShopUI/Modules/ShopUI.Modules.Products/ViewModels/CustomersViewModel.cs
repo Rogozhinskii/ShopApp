@@ -3,7 +3,7 @@ using ShopUI.Core.MVVM;
 
 namespace ShopUI.Modules.Products.ViewModels
 {
-    public class ProductsViewModel:ViewModelBase
+    public class CustomersViewModel:ViewModelBase
     {
 
     }

@@ -5,6 +5,9 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              Width="300" Height="200">
+    <UserControl.InputBindings>
+        <KeyBinding Command="{Binding LogInCommand}" Gesture="Enter"/>
+    </UserControl.InputBindings>
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -34,8 +37,6 @@
         </StackPanel>
 
         <TextBlock Grid.Row="0" Text="{Binding ErrorMessage}" Margin="10"/>
-        <ProgressBar Grid.Row="0" IsIndeterminate="True"/>
-
         <Button Grid.Row="2" 
                 Command="{Binding LogInCommand}" 
                 Content="LogIn" 
