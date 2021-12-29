@@ -10,5 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\ShopUI.Core\ShopUI.Core.csproj" />
+    <ProjectReference Include="..\..\..\ShopUI.Services.Interfaces\ShopUI.Services.Interfaces.csproj" />
   </ItemGroup>
 </Project>

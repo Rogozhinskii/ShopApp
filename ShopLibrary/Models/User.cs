@@ -1,6 +1,4 @@
-﻿using ShopLibrary.DAL.interfaces;
-
-namespace ShopLibrary.Models
+﻿namespace ShopLibrary.Models
 {
     public class User:EntityBase
     {       

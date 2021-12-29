@@ -1,13 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ShopLibrary.Authentication;
-using ShopLibrary.DAL;
-using ShopLibrary.Models;
-using ShopLibrary.Services;
 using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
-using System.Data.SqlClient;
-using System.Text;
 
 namespace ShopTest
 {

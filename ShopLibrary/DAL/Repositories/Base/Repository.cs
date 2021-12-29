@@ -8,12 +8,15 @@ namespace ShopLibrary.DAL.Repositories
     {
         protected readonly DbProviderFactory _providerFactory;
         protected readonly string _conectionString;
+        public string ConnectionString => _conectionString;
+        public ConnectionState ConnectionState => _connection.State;
         protected IDbConnection _connection;
 
         public Repository(DbProviderFactory factory, string connectionString)
         {
             _providerFactory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _conectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            _conectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));  
+            OpenConnection();
         }
 
         protected void OpenConnection()

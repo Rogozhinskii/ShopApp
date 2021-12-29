@@ -20,6 +20,7 @@ namespace ShopUI.Modules.NotificationTools
         {
             _regionManager.RegisterViewWithRegion(RegionNames.StatusBarRegion,typeof(StatusBar));
             containerProvider.Resolve<IAuthenticationService>();
+            containerProvider.Resolve<IRepositoryManager>();
             
         }
 
@@ -29,6 +30,7 @@ namespace ShopUI.Modules.NotificationTools
             {
                 containerRegistry.RegisterDialog<AuthenticationDialog, AuthenticationDialogViewModel>();
                 containerRegistry.RegisterDialog<ErrorNotification, ErrorNotificationViewModel>();
+                containerRegistry.RegisterDialog<ConnectionInfoDialog, ConnectionInfoDialogViewModel>();
                 
                 
             }

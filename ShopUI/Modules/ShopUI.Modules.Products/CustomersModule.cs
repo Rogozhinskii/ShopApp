@@ -1,7 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
 using ShopUI.Modules.Products.Views;
+using ShopUI.Services.Interfaces;
 
 namespace ShopUI.Modules.Products
 {
@@ -16,7 +16,10 @@ namespace ShopUI.Modules.Products
 
         public void OnInitialized(IContainerProvider containerProvider)
         {            
-            
+            if(containerProvider != null)
+            {
+                containerProvider.Resolve<IRepositoryManager>();
+            }
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
