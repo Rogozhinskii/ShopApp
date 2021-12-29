@@ -8,12 +8,11 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
 {
     public class StatusBarViewModel:BindableBase
     {
-        private readonly IRepositoryManager _repositoryManager;
+        
         private readonly IDialogService _dialogService;
 
-        public StatusBarViewModel(IRepositoryManager repositoryManager,IDialogService dialogService)
-        {
-            _repositoryManager = repositoryManager;
+        public StatusBarViewModel(IDialogService dialogService)
+        {            
             _dialogService = dialogService;
         }
         private Visibility _progressBarVisibility;

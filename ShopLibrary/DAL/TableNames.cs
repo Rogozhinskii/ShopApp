@@ -9,5 +9,7 @@ namespace ShopLibrary.DAL
     internal class TableNames
     {
         public const string UserTable = "Users";
+        public const string CustomersTable = "Customers";
+        public const string ProductsTable = "Products";
     }
 }

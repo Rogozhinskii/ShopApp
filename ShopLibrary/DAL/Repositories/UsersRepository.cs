@@ -37,7 +37,6 @@ namespace ShopLibrary.DAL.Repositories
                 }
                 catch (Exception)
                 {
-
                     throw;
                 }
                 finally
@@ -76,16 +75,16 @@ namespace ShopLibrary.DAL.Repositories
             return false;
         }
 
-        public override bool InsertMany(IEnumerable<User> entities)
-        {
-            bool result = false;
-            foreach (User item in entities)
-            {
-                result=Insert(item);
-                if (!result)
-                    throw new InvalidOperationException($"Can`t insert data to DB. Object {item.Name}");
-            }
-            return result;
-        }
+        //public override bool InsertMany(IEnumerable<User> entities)
+        //{
+        //    bool result = false;
+        //    foreach (User item in entities)
+        //    {
+        //        result=Insert(item);
+        //        if (!result)
+        //            throw new InvalidOperationException($"Can`t insert data to DB. Object {item.Name}");
+        //    }
+        //    return result;
+        //}
     }
 }

@@ -5,11 +5,17 @@
     <AssemblyName>ShopUI.Modules.ModuleName</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\unknown.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />    
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\ShopUI.Core\ShopUI.Core.csproj" />
     <ProjectReference Include="..\..\..\ShopUI.Services.Interfaces\ShopUI.Services.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Controls\unknown.png" />
   </ItemGroup>
 </Project>

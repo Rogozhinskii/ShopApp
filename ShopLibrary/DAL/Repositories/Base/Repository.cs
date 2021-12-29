@@ -20,7 +20,7 @@ namespace ShopLibrary.DAL.Repositories
         }
 
         protected void OpenConnection()
-        {
+        {            
             if (_conectionString == null || _connection is null || _connection.State == ConnectionState.Closed)
             {
                 _connection = _providerFactory.CreateConnection();
@@ -84,7 +84,14 @@ namespace ShopLibrary.DAL.Repositories
 
         public virtual bool InsertMany(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            foreach (T item in entities)
+            {
+                result = Insert(item);
+                if (!result)
+                    throw new InvalidOperationException($"Can`t insert data to DB. Object {item.GetType()}");
+            }
+            return result;
         }
 
         public virtual bool Update(T entity)
