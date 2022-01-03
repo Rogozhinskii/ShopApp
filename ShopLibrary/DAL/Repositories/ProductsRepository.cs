@@ -97,7 +97,35 @@ namespace ShopLibrary.DAL.Repositories
             return result;
         }
 
-        
-        
+
+        public override async Task<bool> Update(Product entity)
+        {
+            string sql = $"Update {TableNames.ProductsTable} set description=@description," +
+                                                                $"email=@email," +
+                                                                $"productCode=@productCode " +
+                                                                $"where id=@id";
+            bool result = false;
+            using (var cmd = GetCommand(sql))
+            {            
+                cmd.Parameters.Add(GetParameter("description", DbType.String, entity.Description));
+                cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
+                cmd.Parameters.Add(GetParameter("productCode", DbType.Int32, entity.ProductCode));
+                cmd.Parameters.Add(GetParameter("id", DbType.Int32, entity.Id));
+                try
+                {
+                    int rowUpdated = await cmd.ExecuteNonQueryAsync();
+                    if(rowUpdated != 0) result = true;
+                }
+                catch (Exception){
+                    CloseConnection();
+                    throw;
+                }
+
+            }
+
+            return result;
+        }
+
+
     }
 }

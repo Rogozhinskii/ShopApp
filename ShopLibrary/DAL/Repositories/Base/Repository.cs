@@ -96,7 +96,7 @@ namespace ShopLibrary.DAL.Repositories
             return result;
         }
 
-        public virtual bool Update(T entity)
+        public virtual Task<bool> Update(T entity)
         {
             throw new NotImplementedException();
         }

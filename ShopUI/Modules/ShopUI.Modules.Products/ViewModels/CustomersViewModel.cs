@@ -9,9 +9,11 @@ using ShopUI.Core;
 using ShopUI.Core.MVVM;
 using ShopUI.Services;
 using ShopUI.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Threading;
@@ -27,6 +29,8 @@ namespace ShopUI.Modules.Products.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IDialogService _dialogService;
         private IRepository<Product> _productRepository;
+
+        public event EventHandler sourseUpdateEvent;
 
         public CustomersViewModel(IRepositoryManager repositoryManager, IEventAggregator eventAggregator,IDialogService dialogService)
         {
@@ -66,12 +70,11 @@ namespace ShopUI.Modules.Products.ViewModels
 
         async void ExecuteSelectionChanged()
         {
-            Products.Clear();
+            Products.Clear();            
             var uploadedProducts=await _productRepository.Select("email", SelectedCustomer.Email);
-            Products.AddRange(uploadedProducts);           
+            Products.AddRange(uploadedProducts); 
             RaisePropertyChanged(nameof(Products));
         }
-
 
 
         private Customer _selectedCustomer;
@@ -94,21 +97,24 @@ namespace ShopUI.Modules.Products.ViewModels
         private DelegateCommand<object> _editRecordCommand;
 
         public DelegateCommand<object> EditRecordCommand =>
-           _editRecordCommand ??= _editRecordCommand = new DelegateCommand<object>(ExecuteEditRecordCommand);
+           _editRecordCommand ??= _editRecordCommand = new DelegateCommand<object>(async (obj)=>await ExecuteEditRecordCommand(obj));
 
-        void ExecuteEditRecordCommand(object obj)
+        async Task ExecuteEditRecordCommand(object obj)
         {            
             var firstSelectedItem=(obj as ObservableCollection<object>).Cast<Product>().FirstOrDefault();
             if(firstSelectedItem != null)
             {
                 DialogParameters parameters = new();
                 parameters.Add(CommonTypesPrism.recordForEdit, firstSelectedItem);
-                _dialogService.Show(CommonTypesPrism.AddEditDialog, parameters, result =>
+                _dialogService.Show(CommonTypesPrism.AddEditDialog, parameters,async result =>
                 {
-
+                    await _productRepository.Update(firstSelectedItem);
+                    sourseUpdateEvent.Invoke(this, new EventArgs());
                 });
                 
+
             }
+            
         }
 
 
