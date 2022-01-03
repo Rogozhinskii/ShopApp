@@ -1,5 +1,4 @@
 ﻿using ShopLibrary.DAL.Repositories;
-using ShopLibrary.DAO.interfaces;
 using ShopLibrary.Models;
 using ShopLibrary.Services.Interfaces;
 using System.Data.Common;
@@ -12,8 +11,7 @@ namespace ShopLibrary.Services
 
        
         public UsersService(DbProviderFactory factory,string connectionString)
-        {            
-            //_usersRepository = new UsersRepository(factory,connectionString);
+        {   
             _usersRepository = new UsersRepository(factory,connectionString);
         }
 
@@ -28,9 +26,7 @@ namespace ShopLibrary.Services
             return _usersRepository.Find(userName);
         }
 
-        public bool AddNewUser(User newUser)
-        {
-            return _usersRepository.Insert(newUser);
-        }
+        public bool AddNewUser(User newUser)=>_usersRepository.Insert(newUser);
+        
     }
 }

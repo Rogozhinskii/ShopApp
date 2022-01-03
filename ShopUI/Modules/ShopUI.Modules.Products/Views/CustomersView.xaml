@@ -6,21 +6,222 @@
              xmlns:local="clr-namespace:ShopUI.Modules.Products.Views"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:controls="clr-namespace:ShopUI.Modules.Customers.Controls"
+             xmlns:controls="clr-namespace:ShopUI.Modules.Customers.Controls" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:converters="clr-namespace:ShopUI.Core.Converters;assembly=ShopUI.Core"
              mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:IsCheckedConverter x:Key="boolConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="370"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Border>
-            <ListView ItemsSource="{Binding Customers}">
+        <Border Grid.Column="0">
+            <ListView ItemsSource="{Binding Customers}" 
+                      SelectedItem="{Binding SelectedCustomer}"
+                      Margin="10">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <prism:InvokeCommandAction Command="{Binding SelectionChanged}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <controls:CustomerItem/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+        </Border>
+        <Border Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
+            <Grid Cursor="Hand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ToolBar Grid.Row="0"  Style="{DynamicResource MaterialDesignToolBar}" Height="50"
+                         Margin="0,0,0,10">
+                    <Button Content="{materialDesign:PackIcon Kind=Add}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Cursor="Hand"/>
+                    <Separator/>
+                </ToolBar>
+                
+
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding Products,Mode=TwoWay}"
+                          AutoGenerateColumns="False" SelectionMode="Extended" x:Name="_productsList"
+                          IsReadOnly="True">                    
+                    <DataGrid.Columns>
+                        <DataGridCheckBoxColumn Header="IsSelected" 
+                                                Binding="{Binding Path=IsSelected,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}},Mode=OneWay}"
+                                                
+                                                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"/>
+                        
+                        <DataGridTextColumn Header="Email покупателя" Binding="{Binding Email}"/>
+                        <DataGridTextColumn Header="Email покупателя" Binding="{Binding ProductCode}"/>
+                        <DataGridTextColumn Header="Email покупателя" Binding="{Binding Description}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                        ToolTip="Edit Record"
+                                                        Command="{Binding DataContext.EditRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding ElementName=_productsList,Path=SelectedItems}">
+                                            <materialDesign:PackIcon Kind="Edit"
+                                                                     Height="12"
+                                                                     Width="12"/>
+                                        </Button>
+                                        <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                        Command="{Binding DataContext.DeleteRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding ElementName=_productsList,Path=SelectedItems}"
+                                                        ToolTip="Delete Record">
+                                            <Button.DataContext>
+                                                <local:CustomersView/>
+                                            </Button.DataContext>
+                                            <materialDesign:PackIcon Kind="Delete"
+                                                                     Height="12"
+                                                                     Width="12"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                    
+                </DataGrid>
+                
+                <!--<ListView Grid.Row="1"
+                          x:Name="_productsList"
+                          ItemsSource="{Binding Products,Mode=TwoWay}" 
+                          SelectionMode="Extended"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible"
+                          ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.Columns>
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding Path=IsSelected,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Email покупателя" DisplayMemberBinding="{Binding Email}"/>
+                                <GridViewColumn Header="Код товара" DisplayMemberBinding="{Binding ProductCode}"/>
+                                <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}"/>
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                        ToolTip="Edit Record">
+                                                    <materialDesign:PackIcon Kind="Edit"
+                                                                     Height="12"
+                                                                     Width="12"/>                                                    
+                                                </Button>
+                                                <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                        Command="{Binding DataContext.DeleteRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding ElementName=_productsList,Path=SelectedItems}"
+                                                        ToolTip="Delete Record">
+                                                        <Button.DataContext>
+                                                            <local:CustomersView/>
+                                                        </Button.DataContext>
+                                                        <materialDesign:PackIcon Kind="Delete"
+                                                                            Height="12"
+                                                                            Width="12"/>
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                    
+                </ListView>-->
+                
+
+                <!--<DataGrid ItemsSource="{Binding Products}" 
+                          Style="{StaticResource MaterialDesignDataGrid}"
+                          CanUserAddRows="False"
+                          SelectionUnit="FullRow"
+                          SelectionMode="Extended" 
+                          AutoGenerateColumns="False"
+                          Grid.Row="1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Email покупателя" Binding="{Binding Email}"/>
+                        <DataGridTextColumn Header="Код товара" Binding="{Binding ProductCode}"/>
+                        <DataGridTextColumn Header="Описание" Binding="{Binding Description}"/>
+                    </DataGrid.Columns>
+
+
+                </DataGrid>-->
+
+                <!--<DataGrid x:Name="_productsGrid" ItemsSource="{Binding Products,Mode=TwoWay}" 
+                          SelectedItem="{Binding SelectedProduct}"
+                          AutoGenerateColumns="False" 
+                          VerticalScrollBarVisibility="Auto" 
+                          HorizontalScrollBarVisibility="Auto"
+                          Grid.Row="1">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </DataGrid.CellStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MaterialDesignDataGridRow}">                           
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="IsSelected" Value="True"/>                                    
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#EDE7F6"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>                        
+                        <DataGridTextColumn Header="Email покупателя" Binding="{Binding Email}"/>
+                        <DataGridTextColumn Header="Код товара" Binding="{Binding ProductCode}"/>
+                        <DataGridTextColumn Header="Описание" Binding="{Binding Description}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">                                        
+                                        <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                ToolTip="Edit Record"
+                                                >
+                                            <materialDesign:PackIcon Kind="Edit"
+                                                                     Height="12"
+                                                                     Width="12"/>
+                                            <Button.DataContext>
+                                                <local:CustomersView/>
+                                            </Button.DataContext>
+                                        </Button>
+                                        <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                ToolTip="Delete Record">
+                                            <Button.DataContext>
+                                                <local:CustomersView/>
+                                            </Button.DataContext>
+                                            <materialDesign:PackIcon Kind="Delete"
+                                                                     Height="12"
+                                                                     Width="12"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                </DataGrid>-->
+            </Grid>
+            
         </Border>
     </Grid>
 </UserControl>

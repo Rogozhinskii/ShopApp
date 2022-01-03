@@ -7,20 +7,22 @@ namespace ShopLibrary.DAL.Repositories
 {
     public class CustomersRepository : Repository<Customer>
     {
+        private DbDataAdapter _dbAdapter;
         public CustomersRepository(DbProviderFactory factory, string connectionString) 
             : base(factory, connectionString)
         {
         }
 
-        public override List<Customer> GetAll()
+       
+
+        public override async Task<List<Customer>> Select()
         {
             List<Customer> retval = new();
             string sql = $"Select * from {TableNames.CustomersTable}";
             try
             {
-                using var cmd = GetCommand();
-                cmd.CommandText = sql;
-                using var reader = cmd.ExecuteReader();
+                using var cmd = GetCommand(sql);               
+                using var reader = await cmd.ExecuteReaderAsync();
                 while (reader.Read())
                 {
                     retval.Add(new Customer

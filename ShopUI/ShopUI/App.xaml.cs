@@ -25,11 +25,9 @@ namespace ShopUI
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             if (containerRegistry != null)
-            {
-                var providersService = new ProviderFactoryService();                               
+            {                                              
                 var connectionStrings = ConfigurationManager.ConnectionStrings;               
-                var repositoryManager = new RepositoryManager(providersService, connectionStrings);
-                containerRegistry.RegisterInstance<IProviderFactoryService>(providersService);
+                var repositoryManager = new RepositoryManager(connectionStrings);                
                 containerRegistry.RegisterInstance<IRepositoryManager>(repositoryManager);
                 containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
 

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShopLibrary\ShopLibrary.csproj" />
+    <ProjectReference Include="..\ShopUI.Services\ShopUI.Services.csproj" />
   </ItemGroup>
 
 </Project>

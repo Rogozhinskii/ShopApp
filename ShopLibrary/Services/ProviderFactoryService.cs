@@ -5,33 +5,39 @@ using System.Data.SqlClient;
 
 namespace ShopLibrary.Services
 {
-    public class ProviderFactoryService : IProviderFactoryService
+    public static class ProviderFactoryService  //IProviderFactoryService
     {
         private const string SQLProvider = "System.Data.SqlClient";
         private const string OleProvider = "System.Data.OleDb";
-        public DbProviderFactory OleFactory => DbProviderFactories.GetFactory(OleProvider);
 
-        public DbProviderFactory SqlFactory => DbProviderFactories.GetFactory(SQLProvider);
-
-        public ProviderFactoryService()
+        static ProviderFactoryService()
         {
-            RegisterFactory();
+            RegisterFactories();
         }
 
-        public void RegisterFactory(string providerName, DbProviderFactory dbProviderFactory)
+        public static void RegisterFactory(string assemblyName, DbProviderFactory dbProviderFactory)
         {
-            DbProviderFactories.RegisterFactory(providerName, dbProviderFactory);
+            DbProviderFactories.RegisterFactory(assemblyName, dbProviderFactory);
         }
 
+        public static DbProviderFactory GetFactory(DatabaseType databaseType)
+        {
+            return databaseType switch
+            {
+                DatabaseType.SqlServer => DbProviderFactories.GetFactory(SQLProvider),
+                DatabaseType.MsAccess => DbProviderFactories.GetFactory(OleProvider),
+                _ => throw new NotImplementedException()
+            };
+        }
 
+        public static DbProviderFactory GetFactory(string providerName) =>
+            DbProviderFactories.GetFactory(providerName);
 
-        public void RegisterFactory()
+        private static void RegisterFactories()
         {
             DbProviderFactories.RegisterFactory(SQLProvider, SqlClientFactory.Instance);
             DbProviderFactories.RegisterFactory(OleProvider, OleDbFactory.Instance);
         }
 
-        public DbProviderFactory GetFactory(string providerName)=>
-            DbProviderFactories.GetFactory(providerName);
     }
 }

@@ -3,10 +3,9 @@
 namespace ShopLibrary.Services.Interfaces
 {
     public interface IProviderFactoryService
-    {
-        public DbProviderFactory OleFactory { get; }
-        public DbProviderFactory SqlFactory { get; }
-        void RegisterFactory(string providerName, DbProviderFactory dbProviderFactory);
+    {   
+        DbProviderFactory GetFactory(DatabaseType databaseType);
         DbProviderFactory GetFactory(string providerName);
+        public void RegisterFactory(string assemblyName, DbProviderFactory dbProviderFactory);
     }
 }

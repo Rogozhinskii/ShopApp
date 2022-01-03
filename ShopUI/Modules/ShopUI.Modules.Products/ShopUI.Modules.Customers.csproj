@@ -12,6 +12,7 @@
     <PackageReference Include="Prism.Core" Version="8.1.97" />    
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\EventAggregator.Core\EventAggregator.Core.csproj" />
     <ProjectReference Include="..\..\..\ShopUI.Core\ShopUI.Core.csproj" />
     <ProjectReference Include="..\..\..\ShopUI.Services.Interfaces\ShopUI.Services.Interfaces.csproj" />
   </ItemGroup>

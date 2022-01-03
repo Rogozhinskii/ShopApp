@@ -1,27 +1,38 @@
-﻿using Prism.Commands;
+﻿using EventAggregator.Core;
+using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
+using ShopUI.Core;
 using ShopUI.Services.Interfaces;
 using System.Windows;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
     public class StatusBarViewModel:BindableBase
-    {
-        
+    {        
         private readonly IDialogService _dialogService;
+        private readonly IEventAggregator _eventAggregator;
 
-        public StatusBarViewModel(IDialogService dialogService)
-        {            
-            _dialogService = dialogService;
-        }
-        private Visibility _progressBarVisibility;
-        
+        private Visibility _progressBarVisibility = Visibility.Hidden;
 
         public Visibility ProgressBarVisibility
         {
             get { return _progressBarVisibility; }
             set { SetProperty(ref _progressBarVisibility, value); }
+        }
+
+
+        public StatusBarViewModel(IDialogService dialogService,IEventAggregator eventAggregator)
+        {            
+            _dialogService = dialogService;
+            _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<OnLongOperationEvent>().Subscribe(OnLongOperation);
+        }
+        
+        private void OnLongOperation(Visibility visibility)
+        {
+            ProgressBarVisibility = visibility;
         }
 
         private DelegateCommand _showConnectionInfoDialog;
@@ -31,7 +42,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
 
         void ExecuteShowConnectionInfoDialog()
         {
-            _dialogService.ShowDialog("ConnectionInfoDialog",null,null);
+            _dialogService.ShowDialog(CommonTypesPrism.ConnectionInfoDialog,null,null);
         }
 
 

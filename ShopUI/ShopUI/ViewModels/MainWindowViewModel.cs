@@ -52,12 +52,12 @@ namespace ShopUI.ViewModels
             _dialogService.ShowDialog(CommonTypesPrism.AuthenticationDialog, null, (result) =>
              {
                  IsSignedIn = result.Parameters.GetValue<bool>(CommonTypesPrism.logInResult);
+                 IsSignedIn = true;
                  if (IsSignedIn == false)
                  {
                      Application.Current.Shutdown();
                  }
              });
-            
         }
 
 

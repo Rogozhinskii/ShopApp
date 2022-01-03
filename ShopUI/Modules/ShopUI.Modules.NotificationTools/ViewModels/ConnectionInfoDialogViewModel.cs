@@ -23,7 +23,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             set { SetProperty(ref _repositories, value); }
         }
 
-        public override void OnDialogOpened(IDialogParameters parameters)
+        public override void OnDialogOpened(IDialogParameters parameters) //todo переделать
         {
             Repositories = new ObservableCollection<object>(_repositoryManager.Repositories);
         }

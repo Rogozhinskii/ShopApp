@@ -10,6 +10,10 @@ namespace ShopLibrary.DAL.Repositories
         protected readonly string _conectionString;
         public string ConnectionString => _conectionString;
         public ConnectionState ConnectionState => _connection.State;
+
+        public IDbDataAdapter DataAdapter => _dataAdapter;
+        public IDbDataAdapter _dataAdapter;
+
         protected IDbConnection _connection;
 
         public Repository(DbProviderFactory factory, string connectionString)
@@ -18,6 +22,7 @@ namespace ShopLibrary.DAL.Repositories
             _conectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));  
             OpenConnection();
         }
+                
 
         protected void OpenConnection()
         {            
@@ -31,6 +36,12 @@ namespace ShopLibrary.DAL.Repositories
             }
         }
 
+        protected DbCommand GetCommand(string sqlCommand)
+        {
+            var cmd = GetCommand();
+            cmd.CommandText = sqlCommand;
+            return (DbCommand)cmd;
+        }
 
         protected IDbCommand GetCommand()
         {
@@ -56,22 +67,13 @@ namespace ShopLibrary.DAL.Repositories
         }
 
 
-
-        public virtual bool Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
+             
 
         public virtual T Find(object value)
         {
             throw new NotImplementedException();
         }
-
-        public virtual List<T> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
+               
         public virtual T GetById(int id)
         {
             throw new NotImplementedException();
@@ -95,6 +97,21 @@ namespace ShopLibrary.DAL.Repositories
         }
 
         public virtual bool Update(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Task<bool> Delete(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Task<List<T>> Select()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Task<List<T>> Select(string fieldName, object value)
         {
             throw new NotImplementedException();
         }

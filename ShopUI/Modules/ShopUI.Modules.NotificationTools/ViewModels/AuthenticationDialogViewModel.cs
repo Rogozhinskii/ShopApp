@@ -1,27 +1,30 @@
-﻿using Prism.Commands;
+﻿using EventAggregator.Core;
+using Prism.Commands;
+using Prism.Events;
 using Prism.Services.Dialogs;
-using ShopLibrary.Authentication.Interfaces;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
 using ShopUI.Services.Interfaces;
 using System.Security;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
     internal class AuthenticationDialogViewModel:DialogViewModel
-    {
-        private readonly IDialogService _dialogService;
+    {        
         private readonly IAuthenticationService _protector;
+        private readonly IEventAggregator _eventAggregator;
         private static int _currentLoginAttemptCount = 0;
         private static int _maxLoginAttemptCount=2;
 
 
-        public AuthenticationDialogViewModel(IDialogService dialogService, IAuthenticationService protector)
-        {
-            _dialogService = dialogService;
+        public AuthenticationDialogViewModel(IAuthenticationService protector,IEventAggregator eventAggregator)
+        {            
             _protector = protector;
+            _eventAggregator = eventAggregator;
         }
 
 
@@ -63,16 +66,17 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             {
                 if (_currentLoginAttemptCount < _maxLoginAttemptCount)
                 {
-                    if (UserName is null || Password is null) return;
-                    isSignedIf = await _protector.LogIn(UserName, Password);
-                    if (!isSignedIf)
-                    {
+                    _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);
+                    if (UserName is null || Password is null) { _currentLoginAttemptCount++; return; };
+                    isSignedIf = await _protector.LogIn(UserName, Password);                   
+                    if (!isSignedIf){
                         UserName = string.Empty;
                         Password = null;
                         ShowLoginFailedMessage();
                         _currentLoginAttemptCount++;
                         return;
                     }
+                    _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
                 }
 
             }

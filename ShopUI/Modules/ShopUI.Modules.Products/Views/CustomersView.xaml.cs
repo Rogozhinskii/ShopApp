@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using ShopLibrary.Models;
+using ShopUI.Modules.Products.ViewModels;
+using System.Data;
+using System.Windows.Controls;
 
 namespace ShopUI.Modules.Products.Views
 {
@@ -7,9 +10,14 @@ namespace ShopUI.Modules.Products.Views
     /// </summary>
     public partial class CustomersView : UserControl
     {
+      
         public CustomersView()
         {
+            
             InitializeComponent();
+            
         }
+
+       
     }
 }

@@ -7,20 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\unknown.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Prism.Core" Version="8.1.97" />
-    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ShopLibrary\ShopLibrary.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Images\unknown.png" />
+    <ProjectReference Include="..\ShopUI.Core\ShopUI.Core.csproj" />
+    <ProjectReference Include="..\ShopUI.Services.Interfaces\ShopUI.Services.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

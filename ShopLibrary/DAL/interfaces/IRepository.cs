@@ -1,17 +1,20 @@
-﻿
+﻿using ShopLibrary.Models;
 using System.Data;
 
 namespace ShopLibrary.DAO.interfaces
 {
-    public interface IRepository<T>
+    public interface IRepository<T> 
     {
         public string ConnectionString { get;}
         public ConnectionState ConnectionState { get; }
+        public IDbDataAdapter DataAdapter { get; }
+
         public T GetById(int id);
         public T Find(object value);
-        public List<T> GetAll();
+        public Task<List<T>> Select();       
+        public Task<List<T>> Select(string fieldName, object value);
         public bool Update(T entity);
-        public bool Delete(int id);
+        public Task<bool> Delete(T entity);
         public bool Insert(T entity);
         public bool InsertMany(IEnumerable<T> entities);
 

@@ -3,6 +3,6 @@
     public static class ConnectionStringNames
     {
         public const string sqlConnection = "mssqlConnection";
-        public const string oleConnection = "msAccessConnection";
+        public const string accessConnection = "msAccessConnection";
     }
 }

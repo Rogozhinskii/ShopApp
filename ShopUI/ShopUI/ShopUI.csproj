@@ -12,8 +12,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ShopLibrary\ShopLibrary.csproj" />
     <ProjectReference Include="..\..\ShopUI.Core\ShopUI.Core.csproj" />
+    <ProjectReference Include="..\..\ShopUI.Services\ShopUI.Services.csproj" />
     <ProjectReference Include="..\Modules\ShopUI.Modules.NotificationTools\ShopUI.Modules.NotificationTools.csproj" />
     <ProjectReference Include="..\Modules\ShopUI.Modules.Products\ShopUI.Modules.Customers.csproj" />
-    <ProjectReference Include="..\Services\ShopUI.Services\ShopUI.Services.csproj" />
   </ItemGroup>
 </Project>
