@@ -10,16 +10,11 @@ using ShopUI.Core.MVVM;
 using ShopUI.Services;
 using ShopUI.Services.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 
 namespace ShopUI.Modules.Products.ViewModels
 {
@@ -40,11 +35,6 @@ namespace ShopUI.Modules.Products.ViewModels
             Products = new ObservableCollection<Product>();
             
         }
-
-        //private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        //{
-        //    RaisePropertyChanged(nameof(Products));
-        //}
 
         private ObservableCollection<Customer> _customers;
 
@@ -72,8 +62,8 @@ namespace ShopUI.Modules.Products.ViewModels
         {
             Products.Clear();            
             var uploadedProducts=await _productRepository.Select("email", SelectedCustomer.Email);
-            Products.AddRange(uploadedProducts); 
-            RaisePropertyChanged(nameof(Products));
+            Products.AddRange(uploadedProducts);
+            sourseUpdateEvent.Invoke(this, new EventArgs());
         }
 
 
@@ -85,31 +75,30 @@ namespace ShopUI.Modules.Products.ViewModels
             set { SetProperty(ref _selectedCustomer, value);}
         }
 
-        private Product _selectedProduct;
-
-        public Product SelectedProduct
-        {
-            get { return _selectedProduct; }
-            set { SetProperty(ref _selectedProduct, value);}
-        }
-
 
         private DelegateCommand<object> _editRecordCommand;
 
         public DelegateCommand<object> EditRecordCommand =>
-           _editRecordCommand ??= _editRecordCommand = new DelegateCommand<object>(async (obj)=>await ExecuteEditRecordCommand(obj));
+           _editRecordCommand ??= _editRecordCommand = new DelegateCommand<object>(ExecuteEditRecordCommand);
 
-        async Task ExecuteEditRecordCommand(object obj)
+        void ExecuteEditRecordCommand(object obj)
         {            
             var firstSelectedItem=(obj as ObservableCollection<object>).Cast<Product>().FirstOrDefault();
             if(firstSelectedItem != null)
             {
                 DialogParameters parameters = new();
-                parameters.Add(CommonTypesPrism.recordForEdit, firstSelectedItem);
+                parameters.Add(CommonTypesPrism.EditableRecord, firstSelectedItem);
                 _dialogService.Show(CommonTypesPrism.AddEditDialog, parameters,async result =>
                 {
-                    await _productRepository.Update(firstSelectedItem);
-                    sourseUpdateEvent.Invoke(this, new EventArgs());
+                    var editableRecord = result.Parameters.GetValue<Product>(CommonTypesPrism.EditableRecord);                    
+                    if (editableRecord is null || editableRecord.Equals(firstSelectedItem)) return;
+                    var updateResult=await _productRepository.Update(editableRecord);
+                    if (updateResult){
+                        var index=Products.IndexOf(Products.Where(i => i.Id == editableRecord.Id).FirstOrDefault());
+                        Products.RemoveAt(index);
+                        Products.Insert(index, editableRecord);                        
+                        sourseUpdateEvent.Invoke(this, new EventArgs());
+                    }
                 });
                 
 
@@ -134,6 +123,29 @@ namespace ShopUI.Modules.Products.ViewModels
             }            
             _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
         }
+
+
+        private DelegateCommand _addNewProduct;
+
+        public DelegateCommand AddNewProduct =>
+           _addNewProduct ??= _addNewProduct = new(ExecuteAddNewProduct);
+
+        void ExecuteAddNewProduct()
+        {
+            var parameter = new DialogParameters();
+            parameter.Add(CommonTypesPrism.EmailParam,SelectedCustomer.Email);
+            _dialogService.Show(CommonTypesPrism.AddEditDialog,parameter, async result => 
+            {
+                var newRecord = result.Parameters.GetValue<Product>(CommonTypesPrism.EditableRecord);
+                if (newRecord is null) return;
+                bool insertResult=await _productRepository.Insert(newRecord);
+                if(insertResult) Products.Add(newRecord);
+                sourseUpdateEvent.Invoke(this, new EventArgs());
+            });
+        }
+
+
+
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {

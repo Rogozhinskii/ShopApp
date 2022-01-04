@@ -14,7 +14,8 @@
         #region dialog parameter names
         public const string message="message";
         public const string logInResult = "logInResult";
-        public const string recordForEdit = "recordForEdit";
+        public const string EditableRecord = "EditableRecord";
+        public const string EmailParam = "EmailParam";
 
         #endregion
     }

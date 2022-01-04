@@ -79,17 +79,13 @@ namespace ShopLibrary.DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public virtual bool Insert(T entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool InsertMany(IEnumerable<T> entities)
+        
+        public virtual async Task<bool> InsertMany(IEnumerable<T> entities)
         {
             bool result = false;
             foreach (T item in entities)
             {
-                result = Insert(item);
+                result =await Insert(item);
                 if (!result)
                     throw new InvalidOperationException($"Can`t insert data to DB. Object {item.GetType()}");
             }
@@ -112,6 +108,11 @@ namespace ShopLibrary.DAL.Repositories
         }
 
         public virtual Task<List<T>> Select(string fieldName, object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Task<bool> Insert(T entity)
         {
             throw new NotImplementedException();
         }

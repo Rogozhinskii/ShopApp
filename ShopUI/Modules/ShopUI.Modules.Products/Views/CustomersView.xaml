@@ -43,7 +43,9 @@
                 <ToolBar Grid.Row="0"  Style="{DynamicResource MaterialDesignToolBar}" Height="50"
                          Margin="0,0,0,10">
                     <Button Content="{materialDesign:PackIcon Kind=Add}"
-                            Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Cursor="Hand"/>
+                            Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Cursor="Hand"
+                            Command="{Binding AddNewProduct}"/>
+
                     <Separator/>
                 </ToolBar>
                 

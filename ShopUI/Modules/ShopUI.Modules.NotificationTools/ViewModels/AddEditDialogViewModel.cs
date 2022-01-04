@@ -8,6 +8,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
 {
     internal class AddEditDialogViewModel:DialogViewModel
     {
+        private Product _originalRecord;
         private Product _product;
         public Product Product
         {
@@ -44,7 +45,19 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         void ExecuteSaveChangesCommand()
         {
             DialogResult result=new DialogResult();
-            result.Parameters.Add(CommonTypesPrism.recordForEdit, Product);
+            result.Parameters.Add(CommonTypesPrism.EditableRecord, Product);
+            RaiseRequestClose(result);
+        }
+
+        private DelegateCommand _cancelCommand;
+
+        public DelegateCommand CancelCommand =>
+           _cancelCommand ??= _cancelCommand = new(ExecuteCancelCommand);
+
+        void ExecuteCancelCommand()
+        {
+            var result=new DialogResult();
+            result.Parameters.Add(CommonTypesPrism.EditableRecord, _originalRecord);
             RaiseRequestClose(result);
         }
 
@@ -52,16 +65,23 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {
-            var record = parameters.GetValue<Product>(CommonTypesPrism.recordForEdit);
-            if (record != null){
-                Product = record;
+            parameters.TryGetValue(CommonTypesPrism.EditableRecord,out _originalRecord);
+            parameters.TryGetValue(CommonTypesPrism.EmailParam,out string email);
+            if (_originalRecord != null){
+                Product = (Product)_originalRecord.Clone();
             }
+            else{
+                if (email != null)
+                    Product = new Product { Email = email };
+                else
+                    Product = new Product();
+            }
+
         }
 
         public override void OnDialogClosed()
         {
-            Product = null;
-            base.OnDialogClosed();
+            Product = null;           
         }
 
 

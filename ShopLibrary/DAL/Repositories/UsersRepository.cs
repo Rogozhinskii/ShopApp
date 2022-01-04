@@ -50,19 +50,18 @@ namespace ShopLibrary.DAL.Repositories
 
         
 
-        public override bool Insert(User entity)
+        public override async Task<bool> Insert(User entity)
         {
             OpenConnection();
             string sql = $"Insert Into {TableNames.UserTable} (userName,salt,saltedHashedPassword)" +
                         $"values(@userName,@salt,@saltedHashedPassword)";
-            using(var cmd = GetCommand())
-            {
-                cmd.CommandText = sql;
+            using(var cmd = GetCommand(sql))
+            {                
                 cmd.Parameters.Add(GetParameter("userName", DbType.String, entity.Name));
                 cmd.Parameters.Add(GetParameter("salt", DbType.String, entity.Salt));
                 cmd.Parameters.Add(GetParameter("saltedHashedPassword", DbType.String, entity.SaltedHashedPassword));
                 try{
-                    var query = cmd.ExecuteNonQuery();
+                    var query =await cmd.ExecuteNonQueryAsync();
                     if (query != 0)
                         return true;
                 }               

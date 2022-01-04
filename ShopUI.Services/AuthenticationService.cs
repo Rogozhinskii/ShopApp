@@ -25,7 +25,7 @@ namespace ShopUI.Services
 
         public Task<bool> Register(string userName, SecureString password)
         {
-            return Task.Run(() => _protector.Register(userName, password));
+            return Task.Run(() => _protector.RegisterAsync(userName, password));
         }
     }
 }

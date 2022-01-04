@@ -1,6 +1,6 @@
 ﻿namespace ShopLibrary.Models
 {
-    public class Product:EntityBase
+    public class Product:EntityBase,ICloneable
     {
         public string Email { get; set; }
         public int ProductCode { get; set; }
@@ -15,5 +15,15 @@
         public override int GetHashCode() =>
             ToString().GetHashCode();
 
+        public object Clone()
+        {
+            return new Product
+            {
+                Id = Id,
+                Email = Email,
+                ProductCode = ProductCode,
+                Description = Description
+            };
+        }
     }
 }

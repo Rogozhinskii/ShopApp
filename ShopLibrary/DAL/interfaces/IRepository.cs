@@ -15,8 +15,8 @@ namespace ShopLibrary.DAO.interfaces
         public Task<List<T>> Select(string fieldName, object value);
         public Task<bool> Update(T entity);
         public Task<bool> Delete(T entity);
-        public bool Insert(T entity);
-        public bool InsertMany(IEnumerable<T> entities);
+        public Task<bool> Insert(T entity);
+        public Task<bool> InsertMany(IEnumerable<T> entities);
 
         
     }

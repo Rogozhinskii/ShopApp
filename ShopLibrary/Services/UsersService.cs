@@ -26,7 +26,7 @@ namespace ShopLibrary.Services
             return _usersRepository.Find(userName);
         }
 
-        public bool AddNewUser(User newUser)=>_usersRepository.Insert(newUser);
+        public async Task<bool> AddNewUserAsync(User newUser)=>await _usersRepository.Insert(newUser);
         
     }
 }

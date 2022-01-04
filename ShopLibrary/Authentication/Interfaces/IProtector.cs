@@ -11,7 +11,7 @@ namespace ShopLibrary.Authentication.Interfaces
         /// Производит регистрацию пользователей по введенным логину и пароль. Возвращает true если регистрация прошла успешно, 
         /// иначе false
         /// </summary>
-        public bool Register(string userName, SecureString password);
+        public Task<bool> RegisterAsync(string userName, SecureString password);
 
         /// <summary>
         /// Возвращает true если пользователей найден в базе и пароль введен верно, иначе false

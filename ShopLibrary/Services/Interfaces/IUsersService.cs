@@ -8,7 +8,7 @@ namespace ShopLibrary.Services.Interfaces
 
         public User GetUserByUserName(string userName);
 
-        public bool AddNewUser(User user);
+        public Task<bool> AddNewUserAsync(User user);
 
     }
 }

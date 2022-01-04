@@ -52,17 +52,16 @@ namespace ShopLibrary.DAL.Repositories
         }
 
 
-        public override bool Insert(Product entity)
+        public override async Task<bool> Insert(Product entity)
         {
             string sql = $"Insert into {TableNames.ProductsTable} (email,productCode,description)" +
                        $"values(@email,@productCode,@description)";
-            using(var cmd = GetCommand()){
-                cmd.CommandText = sql;
+            using(var cmd = GetCommand(sql)){                
                 cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
                 cmd.Parameters.Add(GetParameter("productCode", DbType.Int32, entity.ProductCode));
                 cmd.Parameters.Add(GetParameter("description", DbType.String, entity.Description));
                 try{
-                    var insertResult=cmd.ExecuteNonQuery();
+                    var insertResult=await cmd.ExecuteNonQueryAsync();
                     if (insertResult != 0)
                         return true;
                 }
@@ -100,6 +99,8 @@ namespace ShopLibrary.DAL.Repositories
 
         public override async Task<bool> Update(Product entity)
         {
+            if(entity == null)
+                return false;
             string sql = $"Update {TableNames.ProductsTable} set description=@description," +
                                                                 $"email=@email," +
                                                                 $"productCode=@productCode " +

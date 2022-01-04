@@ -49,21 +49,20 @@ namespace ShopLibrary.DAL.Repositories
             
             return retval;
         }
-        public override bool Insert(Customer entity)
+        public override async Task<bool> Insert(Customer entity)
         {
             if(entity == null)
                  throw new ArgumentNullException($"can`t add an empty link {nameof(entity)}");
             string sql = $"Insert into {TableNames.CustomersTable} (surname,name,patronymic,phoneNumber,email)" +
                                                                    $"values(@surname,@name,@patronymic,@phoneNumber,@email)";
-            using(var cmd = GetCommand()){
-                cmd.CommandText = sql;
+            using(var cmd = GetCommand(sql)){                
                 cmd.Parameters.Add(GetParameter("surname", DbType.String, entity.Surname));
                 cmd.Parameters.Add(GetParameter("name", DbType.String, entity.Name));
                 cmd.Parameters.Add(GetParameter("patronymic", DbType.String, entity.Patronymic));
                 cmd.Parameters.Add(GetParameter("phoneNumber", DbType.String, entity.PhoneNumber ?? string.Empty));
                 cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
                 try{
-                    var insertResult=cmd.ExecuteNonQuery();
+                    var insertResult=await cmd.ExecuteNonQueryAsync();
                     if(insertResult!=0)
                         return true;
                 }

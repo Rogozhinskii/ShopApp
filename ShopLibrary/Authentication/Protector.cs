@@ -17,7 +17,7 @@ namespace ShopLibrary.Authentication
         {
             _usersRepository = usersRepository;
         }
-        public bool Register(string userName,SecureString password)
+        public async Task<bool> RegisterAsync(string userName,SecureString password)
         {
             var foundedUser = _usersRepository.Find(userName);
             if(foundedUser.Name== userName)
@@ -33,7 +33,7 @@ namespace ShopLibrary.Authentication
                 Salt = saltText,
                 SaltedHashedPassword = saltedhashedPassword,
             };
-            return _usersRepository.Insert(newUser);
+            return await _usersRepository.Insert(newUser);
         }
 
         public bool LogIn(string userName,SecureString password)
