@@ -16,11 +16,24 @@
                 <prism:InvokeCommandAction Command="{Binding StartApplicationCommand}"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        <TabControl Grid.Row="0">
-            <TabItem Header="Продукты" IsSelected="{Binding IsProductsTabSelected, Mode=TwoWay}">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0">
                 <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.CustomersRegion}" />
+            </Border>
+            <Border Grid.Column="1">
+                <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ProductsRegion}" />
+            </Border>
+            
+        </Grid>
+        <!--<TabControl Grid.Row="0">
+            <TabItem Header="Продукты" IsSelected="{Binding IsProductsTabSelected, Mode=TwoWay}">
+                
             </TabItem>
-        </TabControl>
+        </TabControl>-->
         <Border Grid.Row="1">
             <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.StatusBarRegion}"/>
         </Border>

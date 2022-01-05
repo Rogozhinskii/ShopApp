@@ -26,7 +26,13 @@ namespace ShopLibrary.Services
             return _usersRepository.Find(userName);
         }
 
-        public async Task<bool> AddNewUserAsync(User newUser)=>await _usersRepository.Insert(newUser);
+        public async Task<bool> AddNewUserAsync(User newUser)
+        {
+            int newRecordId=await _usersRepository.Insert(newUser);
+            if(newRecordId>0)
+                return true;
+            return false;
+        }
         
     }
 }

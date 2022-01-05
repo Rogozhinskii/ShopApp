@@ -1,5 +1,8 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
+using Prism.Regions;
+using ShopUI.Core;
+using ShopUI.Modules.Customers.Views;
 using ShopUI.Modules.Products.Views;
 using ShopUI.Services.Interfaces;
 
@@ -7,11 +10,11 @@ namespace ShopUI.Modules.Products
 {
     public class CustomersModule : IModule
     {
-       
+        private readonly IRegionManager _regionManager;
 
-        public CustomersModule()
+        public CustomersModule(IRegionManager regionManager)
         {
-           
+            _regionManager = regionManager;
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
@@ -19,6 +22,7 @@ namespace ShopUI.Modules.Products
             if(containerProvider != null)
             {
                 containerProvider.Resolve<IRepositoryManager>();
+                _regionManager.RegisterViewWithRegion(RegionNames.ProductsRegion, typeof(ProductsView));
             }
         }
 
@@ -26,7 +30,7 @@ namespace ShopUI.Modules.Products
         {            
             if (containerRegistry != null)
             {
-                containerRegistry.RegisterForNavigation<CustomersView>();
+                containerRegistry.RegisterForNavigation<CustomersView>();  
             }
 
         }

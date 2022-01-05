@@ -85,8 +85,8 @@ namespace ShopLibrary.DAL.Repositories
             bool result = false;
             foreach (T item in entities)
             {
-                result =await Insert(item);
-                if (!result)
+                int newRecordId =await Insert(item);
+                if (newRecordId == 0)
                     throw new InvalidOperationException($"Can`t insert data to DB. Object {item.GetType()}");
             }
             return result;
@@ -112,9 +112,10 @@ namespace ShopLibrary.DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public virtual Task<bool> Insert(T entity)
+        public virtual Task<int> Insert(T entity)
         {
             throw new NotImplementedException();
         }
+
     }
 }

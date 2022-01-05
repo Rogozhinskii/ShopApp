@@ -33,7 +33,10 @@ namespace ShopLibrary.Authentication
                 Salt = saltText,
                 SaltedHashedPassword = saltedhashedPassword,
             };
-            return await _usersRepository.Insert(newUser);
+            var newUserId=await _usersRepository.Insert(newUser);
+            if (newUserId != 0)
+                return true;
+            return false;
         }
 
         public bool LogIn(string userName,SecureString password)

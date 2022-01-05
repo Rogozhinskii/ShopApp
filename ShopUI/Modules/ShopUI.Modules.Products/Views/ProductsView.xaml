@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="ShopUI.Modules.Customers.Views.ProductsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:local="clr-namespace:ShopUI.Modules.Customers.Views">
+    <Border Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <Grid Cursor="Hand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ToolBar Grid.Row="0"  Style="{DynamicResource MaterialDesignToolBar}" Height="50"
+                         Margin="0,0,0,10">
+                <Button Content="{materialDesign:PackIcon Kind=Add}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Cursor="Hand"
+                            Command="{Binding AddNewProduct}"/>
+
+                <Separator/>
+            </ToolBar>
+
+            <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding Products,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          AutoGenerateColumns="False" SelectionMode="Extended" x:Name="_productsList"
+                          IsReadOnly="True"
+                          >
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="IsSelected" 
+                                                Binding="{Binding Path=IsSelected,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}},Mode=OneWay}"
+                                                
+                                                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"/>
+
+                    <DataGridTextColumn Header="Email покупателя" Binding="{Binding Email,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <DataGridTextColumn Header="Email покупателя" Binding="{Binding ProductCode,UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Email покупателя" Binding="{Binding Description,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                        ToolTip="Edit Record"
+                                                        Command="{Binding DataContext.EditRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding ElementName=_productsList,Path=SelectedItems}">
+                                        <materialDesign:PackIcon Kind="Edit"
+                                                                 Height="12"
+                                                                 Width="12"/>
+                                    </Button>
+                                    <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                        Command="{Binding DataContext.DeleteRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding ElementName=_productsList,Path=SelectedItems}"
+                                                        ToolTip="Delete Record">                                       
+                                        <materialDesign:PackIcon Kind="Delete"
+                                                                 Height="12"
+                                                                 Width="12"/>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </Grid>
+
+    </Border>
+</UserControl>

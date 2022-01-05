@@ -17,7 +17,7 @@ namespace ShopLibrary.DAL.Repositories
             if (value != null){
                 OpenConnection();
                 string userName = value.ToString();
-                string sqlCommand = $"Select * from {TableNames.UserTable} where userName=@userName";
+                string sqlCommand = $"Select * from {TableConstants.UserTable} where userName=@userName";
                 using var cmd = GetCommand();
                 cmd.CommandText = sqlCommand;
                 cmd.Parameters.Add(GetParameter(nameof(userName), DbType.String, userName));
@@ -50,20 +50,26 @@ namespace ShopLibrary.DAL.Repositories
 
         
 
-        public override async Task<bool> Insert(User entity)
+        public override async Task<int> Insert(User entity)
         {
             OpenConnection();
-            string sql = $"Insert Into {TableNames.UserTable} (userName,salt,saltedHashedPassword)" +
+            string sql = $"Insert Into {TableConstants.UserTable} (userName,salt,saltedHashedPassword)" +
                         $"values(@userName,@salt,@saltedHashedPassword)";
             using(var cmd = GetCommand(sql))
-            {                
+            {
+                var idParam = GetParameter("id", DbType.Int32, entity.Id).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(idParam);
                 cmd.Parameters.Add(GetParameter("userName", DbType.String, entity.Name));
                 cmd.Parameters.Add(GetParameter("salt", DbType.String, entity.Salt));
                 cmd.Parameters.Add(GetParameter("saltedHashedPassword", DbType.String, entity.SaltedHashedPassword));
                 try{
-                    var query =await cmd.ExecuteNonQueryAsync();
-                    if (query != 0)
-                        return true;
+                    //var newRecordId =await cmd.ExecuteNonQueryAsync();
+
+                    //if (newRecordId != 0)
+                    //    return newRecordId;
+                    var newRecordId = await cmd.ExecuteScalarAsync();
+                    if ((int)newRecordId != 0)
+                        return (int)newRecordId;
                 }               
                 catch (Exception ex){
                     CloseConnection();
@@ -71,7 +77,7 @@ namespace ShopLibrary.DAL.Repositories
                 }
             }
 
-            return false;
+            return 0;
         }
 
         //public override bool InsertMany(IEnumerable<User> entities)

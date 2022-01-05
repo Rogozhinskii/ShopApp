@@ -16,7 +16,7 @@ namespace ShopLibrary.DAL.Repositories
             List<Product> products = new();            
             if (value is null)
                 throw new ArgumentNullException("value to filter cannot be null");
-            string sql = $"Select * from {TableNames.ProductsTable} where {fieldName}=@value";
+            string sql = $"Select * from {TableConstants.ProductsTable} where {fieldName}=@value";
             using (var cmd = GetCommand(sql))
             {
                 try
@@ -52,35 +52,40 @@ namespace ShopLibrary.DAL.Repositories
         }
 
 
-        public override async Task<bool> Insert(Product entity)
+        public override async Task<int> Insert(Product entity)
         {
-            string sql = $"Insert into {TableNames.ProductsTable} (email,productCode,description)" +
+            OpenConnection();
+            string sqlInsert = $"Insert into {TableConstants.ProductsTable} (email,productCode,description)" +
                        $"values(@email,@productCode,@description)";
-            using(var cmd = GetCommand(sql)){                
+            string sqlIdentity = $"SELECT @@identity FROM {TableConstants.ProductsTable}";
+            using (var cmd = GetCommand(sqlInsert)){
+                using var cmdIdentity=GetCommand(sqlIdentity);                //MSAccess не поддерживает возвращаемый параметр
                 cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
                 cmd.Parameters.Add(GetParameter("productCode", DbType.Int32, entity.ProductCode));
                 cmd.Parameters.Add(GetParameter("description", DbType.String, entity.Description));
                 try{
-                    var insertResult=await cmd.ExecuteNonQueryAsync();
-                    if (insertResult != 0)
-                        return true;
+                    var insertResult = await cmd.ExecuteNonQueryAsync();                    
+                    if (insertResult != 0){
+                        int id= (int)await cmdIdentity.ExecuteScalarAsync();
+                        return id;
+                    }
+                       
                 }
                 catch (InvalidOperationException){
                     CloseConnection();
-                    return false;
+                    return 0;
                 }
-                catch(Exception ex)
-                {
+                catch(Exception ex){
                     CloseConnection();
                 }
             }
-            return false;
+            return 0;
         }
 
         public override async Task<bool> Delete(Product entity)
         {
             bool result = false;
-            string sql = $"Delete from {TableNames.ProductsTable} where id=@id";
+            string sql = $"Delete from {TableConstants.ProductsTable} where id=@id";
             using (var cmd = GetCommand(sql)){
                 cmd.Parameters.Add(GetParameter("id",DbType.Int32, entity.Id));
                 try{
@@ -101,7 +106,7 @@ namespace ShopLibrary.DAL.Repositories
         {
             if(entity == null)
                 return false;
-            string sql = $"Update {TableNames.ProductsTable} set description=@description," +
+            string sql = $"Update {TableConstants.ProductsTable} set description=@description," +
                                                                 $"email=@email," +
                                                                 $"productCode=@productCode " +
                                                                 $"where id=@id";

@@ -8,18 +8,12 @@ namespace ShopUI.Modules.Products.Views
     /// </summary>
     public partial class CustomersView : UserControl
     {
-        private CustomersViewModel _vm;
+        
         public CustomersView()
         {            
-            InitializeComponent();
-            _vm = (CustomersViewModel)_productsList.DataContext;
-            _vm.sourseUpdateEvent += _vm_sourseUpdateEvent;
+            InitializeComponent();            
         }
 
-        private void _vm_sourseUpdateEvent(object sender, System.EventArgs e)
-        {
-            _productsList.Items.Refresh();
-        }
 
     }
 }

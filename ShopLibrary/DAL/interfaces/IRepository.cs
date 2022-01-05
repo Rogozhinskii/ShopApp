@@ -1,5 +1,4 @@
-﻿using ShopLibrary.Models;
-using System.Data;
+﻿using System.Data;
 
 namespace ShopLibrary.DAO.interfaces
 {
@@ -8,16 +7,14 @@ namespace ShopLibrary.DAO.interfaces
         public string ConnectionString { get;}
         public ConnectionState ConnectionState { get; }
         public IDbDataAdapter DataAdapter { get; }
-
         public T GetById(int id);
         public T Find(object value);
         public Task<List<T>> Select();       
         public Task<List<T>> Select(string fieldName, object value);
         public Task<bool> Update(T entity);
         public Task<bool> Delete(T entity);
-        public Task<bool> Insert(T entity);
+        public Task<int> Insert(T entity);        
         public Task<bool> InsertMany(IEnumerable<T> entities);
-
         
     }
 }
