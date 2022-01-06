@@ -1,8 +1,6 @@
 ﻿using ShopLibrary.Authentication.Interfaces;
 using ShopLibrary.DAO.interfaces;
 using ShopLibrary.Models;
-using ShopLibrary.Services;
-using ShopLibrary.Services.Interfaces;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,7 +15,7 @@ namespace ShopLibrary.Authentication
         {
             _usersRepository = usersRepository;
         }
-        public async Task<bool> RegisterAsync(string userName,SecureString password)
+        public async Task<bool> Register(string userName,SecureString password)
         {
             var foundedUser = _usersRepository.Find(userName);
             if(foundedUser.Name== userName)

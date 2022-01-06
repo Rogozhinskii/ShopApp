@@ -19,8 +19,7 @@ namespace ShopUI.Modules.Products.ViewModels
     public class CustomersViewModel : ViewModelBase
     {
         private readonly IRepositoryManager _repositoryManager;
-        private readonly IEventAggregator _eventAggregator;
-        private readonly IDialogService _dialogService;
+        private readonly IEventAggregator _eventAggregator;       
         private IRepository<Customer> _customersRepository;
 
         public CustomersViewModel(IRepositoryManager repositoryManager, IEventAggregator eventAggregator,IDialogService dialogService)
@@ -104,8 +103,7 @@ namespace ShopUI.Modules.Products.ViewModels
                 });
             }
             catch (Exception ex){
-                parameters.Add(CommonTypesPrism.DialogMessage, ex.Message);
-                _dialogService.Show(CommonTypesPrism.ErrorNotification, parameters, null);
+                ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);
             }
             
         }

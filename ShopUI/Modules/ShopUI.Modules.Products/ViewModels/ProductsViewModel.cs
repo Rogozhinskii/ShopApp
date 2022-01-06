@@ -19,8 +19,7 @@ namespace ShopUI.Modules.Customers.ViewModels
 {
     public class ProductsViewModel: ViewModelBase
     {
-        private readonly IRepositoryManager _repositoryManager;
-        private readonly IDialogService _dialogService;
+        private readonly IRepositoryManager _repositoryManager;       
         private readonly IEventAggregator _eventAggregator;
         private IRepository<Product> _productRepository;
         public event EventHandler sourseUpdateEvent;
@@ -45,14 +44,12 @@ namespace ShopUI.Modules.Customers.ViewModels
                 var deleteResult = await _productRepository.Delete(x => x.Email == obj.Email);
                 if (deleteResult)
                 {
-                    parameters.Add(CommonTypesPrism.DialogMessage, "Записи удалены");
-                    _dialogService.Show(CommonTypesPrism.NotificationDialog, parameters, null);
+                    ShowNotificationDialog(DialogType.NotificationDialog, "Записи удалены");
                 }
             }
             catch (Exception ex)
             {
-                parameters.Add(CommonTypesPrism.DialogMessage, ex.Message);                
-                _dialogService.Show(CommonTypesPrism.ErrorNotification,parameters, null);                
+                ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);
             }
            
 

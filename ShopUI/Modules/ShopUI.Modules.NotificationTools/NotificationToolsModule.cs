@@ -34,6 +34,7 @@ namespace ShopUI.Modules.NotificationTools
                 containerRegistry.RegisterDialog<ConnectionInfoDialog, ConnectionInfoDialogViewModel>();
                 containerRegistry.RegisterDialog<AddEditDialog, AddEditProductDialogViewModel>();
                 containerRegistry.RegisterDialog<AddEditCustomerDialog, AddEditCustomerDialogViewModel>();
+                containerRegistry.RegisterDialog<RegisterUserDialog, RegisterUserDialogViewModel>();
                 
             }
         }

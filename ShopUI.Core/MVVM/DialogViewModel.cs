@@ -5,7 +5,8 @@ namespace ShopUI.Core.MVVM
 {
     public class DialogViewModel : BindableBase, IDialogAware
     {
-        public string Title => "";
+        public virtual string Title => "";
+        protected IDialogService _dialogService;
 
         public event Action<IDialogResult> RequestClose;
         public virtual void RaiseRequestClose(IDialogResult result)
@@ -19,5 +20,20 @@ namespace ShopUI.Core.MVVM
         public virtual void OnDialogClosed() { }
 
         public virtual void OnDialogOpened(IDialogParameters parameters) { }
+
+        protected void ShowNotificationDialog(DialogType dialogType,string message)
+        {
+            var parameters = new DialogParameters();
+            parameters.Add(CommonTypesPrism.DialogMessage, message);
+            switch (dialogType)
+            {
+                case DialogType.NotificationDialog:
+                    _dialogService.Show(CommonTypesPrism.NotificationDialog, parameters, null);
+                    break;
+                case DialogType.ErrorDialog:
+                    _dialogService.Show(CommonTypesPrism.ErrorNotification, parameters, null);
+                    break;
+            }           
+        }
     }
 }

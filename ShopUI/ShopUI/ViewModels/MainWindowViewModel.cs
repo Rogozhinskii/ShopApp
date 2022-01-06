@@ -51,8 +51,7 @@ namespace ShopUI.ViewModels
         {
             _dialogService.ShowDialog(CommonTypesPrism.AuthenticationDialog, null, (result) =>
              {
-                 IsSignedIn = result.Parameters.GetValue<bool>(CommonTypesPrism.logInResult);
-                 IsSignedIn = true;
+                 IsSignedIn = result.Parameters.GetValue<bool>(CommonTypesPrism.logInResult);                
                  if (IsSignedIn == false || result.Result!=ButtonResult.OK)
                  {
                      Application.Current.Shutdown();

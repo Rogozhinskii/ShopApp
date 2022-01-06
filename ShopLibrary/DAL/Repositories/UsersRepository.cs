@@ -56,18 +56,12 @@ namespace ShopLibrary.DAL.Repositories
             string sql = $"Insert Into {TableConstants.UserTable} (userName,salt,saltedHashedPassword)" +
                         $"values(@userName,@salt,@saltedHashedPassword)";
             using(var cmd = GetCommand(sql))
-            {
-                var idParam = GetParameter("id", DbType.Int32, entity.Id).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(idParam);
+            {                
                 cmd.Parameters.Add(GetParameter("userName", DbType.String, entity.Name));
                 cmd.Parameters.Add(GetParameter("salt", DbType.String, entity.Salt));
                 cmd.Parameters.Add(GetParameter("saltedHashedPassword", DbType.String, entity.SaltedHashedPassword));
-                try{
-                    //var newRecordId =await cmd.ExecuteNonQueryAsync();
-
-                    //if (newRecordId != 0)
-                    //    return newRecordId;
-                    var newRecordId = await cmd.ExecuteScalarAsync();
+                try{                    
+                    var newRecordId = await cmd.ExecuteNonQueryAsync();
                     if ((int)newRecordId != 0)
                         return (int)newRecordId;
                 }               

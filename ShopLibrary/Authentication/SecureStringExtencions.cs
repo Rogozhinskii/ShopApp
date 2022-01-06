@@ -3,7 +3,7 @@ using System.Security;
 
 namespace ShopLibrary.Authentication
 {
-    internal static class SecureStringExtencions
+    public static class SecureStringExtencions
     {
         public static string GetPasswordAsString(this SecureString source)
         {
