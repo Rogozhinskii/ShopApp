@@ -22,13 +22,13 @@
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
                      MaxWidth="400"
-                     materialDesign:HintAssist.Hint="Login"
+                     materialDesign:HintAssist.Hint="Login (Admin)"
                      Margin="0,0,0,10"
-                     Text="{Binding UserName, Mode=TwoWay}"/>
+                     Text="{Binding UserName, Mode=TwoWay}" Cursor="IBeam"/>
             <PasswordBox x:Name="_pswBox"
                          Style="{StaticResource MaterialDesignFilledPasswordBox}"
                          VerticalAlignment="Top"                        
-                         materialDesign:HintAssist.Hint="Password" Cursor="IBeam">
+                         materialDesign:HintAssist.Hint="Password (Admin)" Cursor="IBeam">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PasswordChanged">
                         <prism:InvokeCommandAction Command="{Binding PasswordChangedCommand}" CommandParameter="{Binding ElementName=_pswBox}"/>
