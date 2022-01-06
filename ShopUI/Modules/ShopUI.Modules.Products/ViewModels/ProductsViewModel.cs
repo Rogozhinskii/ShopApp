@@ -52,8 +52,7 @@ namespace ShopUI.Modules.Customers.ViewModels
             catch (Exception ex)
             {
                 parameters.Add(CommonTypesPrism.DialogMessage, ex.Message);                
-                _dialogService.Show(CommonTypesPrism.ErrorNotification,parameters, null);
-                throw;
+                _dialogService.Show(CommonTypesPrism.ErrorNotification,parameters, null);                
             }
            
 

@@ -3,15 +3,14 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using ShopLibrary.DAL.Repositories;
 using ShopLibrary.DAO.interfaces;
 using ShopLibrary.Models;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
 using ShopUI.Services;
 using ShopUI.Services.Interfaces;
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -83,6 +82,34 @@ namespace ShopUI.Modules.Products.ViewModels
                     
             }
         }
+
+        private DelegateCommand _addNewCustomerCommand;
+        public DelegateCommand AddNewCustomerCommand =>
+           _addNewCustomerCommand ??= _addNewCustomerCommand = new(ExecuteAddNewCustomerCommand);
+        void ExecuteAddNewCustomerCommand()
+        {
+            DialogParameters parameters = new();
+            try
+            {
+                parameters.Add(CommonTypesPrism.CustomerParam, new Customer());
+                _dialogService.ShowDialog(CommonTypesPrism.AddEditCustomerDialog, parameters, async result =>
+                {
+                    var editableCustomer = result.Parameters.GetValue<Customer>(CommonTypesPrism.CustomerParam);
+                    if (editableCustomer is null) return;
+                    var newCustomerId = await _customersRepository.Insert(editableCustomer);
+                    if (newCustomerId > 0)
+                    {
+                        await UpdateData();
+                    }
+                });
+            }
+            catch (Exception ex){
+                parameters.Add(CommonTypesPrism.DialogMessage, ex.Message);
+                _dialogService.Show(CommonTypesPrism.ErrorNotification, parameters, null);
+            }
+            
+        }
+
 
 
         private async Task UpdateData(){

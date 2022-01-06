@@ -14,7 +14,11 @@
             <ColumnDefinition Width="370"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Border Grid.Column="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Column="0" Grid.Row="0">
             <ListView ItemsSource="{Binding Customers}"
                       SelectedItem="{Binding SelectedCustomer}"
                       Margin="10"
@@ -44,6 +48,11 @@
                 </ListView.ItemTemplate>
             </ListView>
         </Border>
+        <Button Grid.Column="0" Grid.Row="1" 
+                Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                Content="Add new Customer"
+                Command="{Binding AddNewCustomerCommand}"
+                />
        
     </Grid>
 </UserControl>

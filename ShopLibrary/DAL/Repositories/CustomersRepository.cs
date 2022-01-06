@@ -52,27 +52,25 @@ namespace ShopLibrary.DAL.Repositories
         }
         public override async Task<int> Insert(Customer entity)
         {
+            OpenConnection();
             if(entity == null)
                  throw new ArgumentNullException($"can`t add an empty link {nameof(entity)}");
             string sql = $"Insert into {TableConstants.CustomersTable} (surname,name,patronymic,phoneNumber,email)" +
-                                                                   $"values(@surname,@name,@patronymic,@phoneNumber,@email);SET @id = @@IDENTITY;";
-            using(var cmd = GetCommand(sql)){
-                var idParam = GetParameter("id", DbType.Int32, entity.Id).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(idParam);
+                                                                   $"values(@surname,@name,@patronymic,@phoneNumber,@email);select @@IDENTITY;";
+            using(var cmd = GetCommand(sql)){               
                 cmd.Parameters.Add(GetParameter("surname", DbType.String, entity.Surname));
                 cmd.Parameters.Add(GetParameter("name", DbType.String, entity.Name));
                 cmd.Parameters.Add(GetParameter("patronymic", DbType.String, entity.Patronymic));
                 cmd.Parameters.Add(GetParameter("phoneNumber", DbType.String, entity.PhoneNumber ?? string.Empty));
-                cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
+                cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));                
                 try{
-                    //var insertResult=await cmd.ExecuteNonQueryAsync();
-                    var newRecordId=await cmd.ExecuteScalarAsync();
-                    if((int)newRecordId!= 0)
-                        return (int)newRecordId;
+                    var newRecordId = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+                    if (newRecordId != 0)
+                        return newRecordId;
                 }
                 catch (InvalidOperationException){
                     CloseConnection();
-                    return 0;                 
+                   throw;                 
                 }
                 catch (Exception){
                     CloseConnection();

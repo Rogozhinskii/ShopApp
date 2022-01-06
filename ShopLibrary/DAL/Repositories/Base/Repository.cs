@@ -62,7 +62,7 @@ namespace ShopLibrary.DAL.Repositories
             IDataParameter parameter = _providerFactory.CreateParameter();
             parameter.ParameterName = $"@{paramName}";
             parameter.DbType = dbType;
-            parameter.Value = value;
+            parameter.Value = value ?? (object)DBNull.Value;
             return parameter;
         }
 

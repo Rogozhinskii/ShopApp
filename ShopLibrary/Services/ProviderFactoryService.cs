@@ -7,6 +7,7 @@ namespace ShopLibrary.Services
 {
     public static class ProviderFactoryService  //IProviderFactoryService
     {
+        //private const string SQLProvider = "Microsoft.Data.SqlClient";
         private const string SQLProvider = "System.Data.SqlClient";
         private const string OleProvider = "System.Data.OleDb";
 
