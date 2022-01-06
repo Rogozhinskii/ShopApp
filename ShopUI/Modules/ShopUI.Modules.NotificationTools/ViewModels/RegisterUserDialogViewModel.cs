@@ -9,6 +9,9 @@ using System.Windows.Controls;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
+    /// <summary>
+    /// Модель регистрации пользователей
+    /// </summary>
     public class RegisterUserDialogViewModel:DialogViewModel
     {
         public override string Title => "Регистрация пользователя";
@@ -28,6 +31,9 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         }
 
         private SecureString _firstPassword;
+        /// <summary>
+        /// пароль пользователя
+        /// </summary>
         public SecureString FirstPassword
         {
             get { return _firstPassword; }
@@ -35,6 +41,9 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         }
 
         private SecureString _secondPassword;
+        /// <summary>
+        /// второе поле под пароль для сравнения введенных паролей
+        /// </summary>
         public SecureString SecondPassword
         {
             get { return _secondPassword; }

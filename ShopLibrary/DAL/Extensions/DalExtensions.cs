@@ -2,8 +2,19 @@
 
 namespace ShopLibrary.DAL.Extensions
 {
+    /// <summary>
+    /// Расширения для работы с хранилищами
+    /// </summary>
     public static class DalExtensions
     {
+        /// <summary>
+        /// Удаляет записи из бд, соответвующие условию predicatе, возвращает true если все записи удалены, иначе false
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="repository"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static async Task<bool> Delete<T>(this IRepository<T> repository, Func<T, bool> predicate)
         {
             var entities = (await repository.Select()).Where(predicate).ToList();            
@@ -20,10 +31,17 @@ namespace ShopLibrary.DAL.Extensions
             return false;
         }
 
+        /// <summary>
+        /// производит выборку записей из бд, соответующих predicate, возвращает список записей
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="repository"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public static async Task<List<T>> Select<T>(this IRepository<T> repository, Func<T, bool> predicate)
-        {
-            var list = await repository.Select();            
-            return list.Where(predicate).ToList();
+        {            
+            var selectedRecords= await repository.Select();            
+            return selectedRecords.Where(predicate).ToList();
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using Prism.Services.Dialogs;
 using ShopUI.Core;
-using ShopUI.Core.MVVM;
+
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
+    /// <summary>
+    /// Модель диалогового окна уведомлений
+    /// </summary>
     public class NotificationDialogViewModel: ErrorNotificationViewModel
     {
         public override void OnDialogOpened(IDialogParameters parameters)

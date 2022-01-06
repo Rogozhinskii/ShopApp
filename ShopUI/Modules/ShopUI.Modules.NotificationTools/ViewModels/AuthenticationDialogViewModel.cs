@@ -13,11 +13,21 @@ using System.Windows.Controls;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
+    /// <summary>
+    /// Диалоговое окна входа в приложение
+    /// </summary>
     internal class AuthenticationDialogViewModel:DialogViewModel
     {        
         private readonly IAuthenticationService _protector;
-        private readonly IEventAggregator _eventAggregator;        
+        private readonly IEventAggregator _eventAggregator;       
+        
+        /// <summary>
+        /// Счетчик попыток входа
+        /// </summary>
         private static int _currentLoginAttemptCount = 0;
+        /// <summary>
+        /// Максимальное количество попыток входа до закрытия приложения
+        /// </summary>
         private static int _maxLoginAttemptCount=2;
 
 
@@ -28,20 +38,26 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             _dialogService = dialogService;
         }
 
+        #region Свойста
 
+        #region Имя пользователя
         private string _userName;
         public string UserName
         {
             get { return _userName; }
             set { SetProperty(ref _userName, value); }
         }
+        #endregion
 
+        #region Пароль
         private SecureString _password;
         public SecureString Password
         {
             get { return _password; }
             set { SetProperty(ref _password, value); }
         }
+        #endregion
+
 
         private string _message;
         public string Message
@@ -50,7 +66,13 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             set { SetProperty(ref _message, value); }
         }
 
+        #endregion
+
+
         private DelegateCommand _logInCommand;
+        /// <summary>
+        /// реализует вход в приложение
+        /// </summary>
         public DelegateCommand LogInCommand =>
            _logInCommand ??= _logInCommand = new(async()=>await ExecuteLogInCommand());
 
@@ -58,7 +80,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         {            
             bool isSignedIf = false;
             if (!isSignedIf)
-            {
+            { 
                 if (_currentLoginAttemptCount < _maxLoginAttemptCount)
                 {
                     try
@@ -92,7 +114,9 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         }       
 
         private DelegateCommand _registerUserCommand;
-
+        /// <summary>
+        /// Регистрация пользователя
+        /// </summary>
         public DelegateCommand RegisterUserCommand =>
            _registerUserCommand ??= _registerUserCommand = new(ExecuteRegisterUserCommand);
         void ExecuteRegisterUserCommand()
@@ -118,6 +142,9 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         }
 
         private DelegateCommand<object> _passwordChangedCommand;
+        /// <summary>
+        /// Вызывается при изменении поля с паролем
+        /// </summary>
         public DelegateCommand<object> PasswordChangedCommand =>
            _passwordChangedCommand ??= _passwordChangedCommand = new DelegateCommand<object>(ExecutePasswordChangedCommand);
         void ExecutePasswordChangedCommand(object obj)

@@ -3,8 +3,12 @@ using System.Security;
 
 namespace ShopLibrary.Authentication
 {
+   
     public static class SecureStringExtencions
     {
+        /// <summary>
+        /// Расширение для преобразования SecureString в string
+        /// </summary>
         public static string GetPasswordAsString(this SecureString source)
         {
             if(source == null)

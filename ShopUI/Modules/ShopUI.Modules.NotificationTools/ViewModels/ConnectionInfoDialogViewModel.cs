@@ -1,12 +1,13 @@
 ﻿using Prism.Services.Dialogs;
-using ShopLibrary.DAO.interfaces;
 using ShopUI.Core.MVVM;
 using ShopUI.Services.Interfaces;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
+    /// <summary>
+    /// Модель простосмтря строк подключений и их состояний
+    /// </summary>
     internal class ConnectionInfoDialogViewModel:DialogViewModel
     {
         private readonly IRepositoryManager _repositoryManager;
@@ -28,6 +29,5 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             Repositories = new ObservableCollection<object>(_repositoryManager.Repositories);
         }
 
-        public override bool CanCloseDialog() => true;
     }
 }

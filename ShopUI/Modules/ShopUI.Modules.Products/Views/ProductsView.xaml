@@ -4,7 +4,7 @@
              xmlns:prism="http://prismlibrary.com/"             
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-             xmlns:local="clr-namespace:ShopUI.Modules.Customers.Views">
+             >
     <Border Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
         <Grid Cursor="Hand">
             <Grid.RowDefinitions>

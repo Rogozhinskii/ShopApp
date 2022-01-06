@@ -1,15 +1,9 @@
-﻿using ShopLibrary.DAO.interfaces;
-using ShopLibrary.Models;
+﻿using ShopLibrary.Models;
 using System.Data;
 using System.Data.Common;
 
 namespace ShopLibrary.DAL.Repositories
 {
-    public static class DeleteExtencion
-    {
-        
-    }
-
     public class ProductsRepository:Repository<Product>
     {
         public ProductsRepository(DbProviderFactory factory, string connectionString) :base(factory,connectionString)
@@ -18,6 +12,7 @@ namespace ShopLibrary.DAL.Repositories
 
         public override async Task<List<Product>> Select()
         {
+            OpenConnection();
             List<Product> products = new();
             string sql = $"Select * from {TableConstants.ProductsTable}";
             using (var cmd = GetCommand(sql))
@@ -45,6 +40,7 @@ namespace ShopLibrary.DAL.Repositories
                 }
                 catch (Exception)
                 {
+                    CloseConnection();
                     throw;
                 }
 
@@ -52,47 +48,6 @@ namespace ShopLibrary.DAL.Repositories
             }
             return products;
         }
-
-        public override async Task<List<Product>> Select(string fieldName, object value)
-        {
-            List<Product> products = new();            
-            if (value is null)
-                throw new ArgumentNullException("value to filter cannot be null");
-            string sql = $"Select * from {TableConstants.ProductsTable} where {fieldName}=@value";
-            using (var cmd = GetCommand(sql))
-            {
-                try
-                {
-                    cmd.Parameters.Add(GetParameter("value", DbType.String, value.ToString()));
-                    using var reader = await cmd.ExecuteReaderAsync();
-                    while (reader.Read())
-                    {
-                        var product = new Product();
-                        product.Id = (int)reader["id"];
-                        product.Email = reader.GetString("email");
-                        product.Description = reader.GetString("description");
-                        product.ProductCode = (int)reader["productCode"];
-
-                        products.Add(new Product
-                        {
-                            Id = (int)reader["id"],
-                            Email = reader.GetString("email"),
-                            Description = reader.GetString("description"),
-                            ProductCode = (int)reader["productCode"]
-                        });
-                    }
-
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-
-
-            }
-            return products;
-        }
-
 
         public override async Task<int> Insert(Product entity)
         {
@@ -127,6 +82,7 @@ namespace ShopLibrary.DAL.Repositories
 
         public override async Task<bool> Delete(Product entity)
         {
+            OpenConnection();
             bool result = false;
             string sql = $"Delete from {TableConstants.ProductsTable} where id=@id";
             using (var cmd = GetCommand(sql)){
@@ -135,8 +91,7 @@ namespace ShopLibrary.DAL.Repositories
                     int rowDeleted=await cmd.ExecuteNonQueryAsync();
                     if (rowDeleted != 0) result = true;
                 }
-                catch (Exception)
-                {
+                catch (Exception){
                     CloseConnection();
                     throw;
                 }
@@ -149,6 +104,7 @@ namespace ShopLibrary.DAL.Repositories
         {
             if(entity == null)
                 return false;
+            OpenConnection();
             string sql = $"Update {TableConstants.ProductsTable} set description=@description," +
                                                                 $"email=@email," +
                                                                 $"productCode=@productCode " +
@@ -170,7 +126,6 @@ namespace ShopLibrary.DAL.Repositories
                 }
 
             }
-
             return result;
         }
 

@@ -6,10 +6,19 @@ using ShopUI.Core.MVVM;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
+    /// <summary>
+    /// Диалоговое окна редактирвоания продукта
+    /// </summary>
     internal class AddEditProductDialogViewModel:DialogViewModel
     {
+        /// <summary>
+        /// исходный экземпляр продукта
+        /// </summary>
         private Product _originalRecord;
         private Product _product;
+        /// <summary>
+        /// Редактируемый объект продукта
+        /// </summary>
         public Product Product
         {
             get { return _product; }
@@ -17,7 +26,9 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         }       
 
         private DelegateCommand _saveChangesCommand;
-
+        /// <summary>
+        /// Выполняет сохранение изменений
+        /// </summary>
         public DelegateCommand SaveChangesCommand =>
            _saveChangesCommand ??= _saveChangesCommand = new(ExecuteSaveChangesCommand);
 
@@ -29,7 +40,9 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         }
 
         private DelegateCommand _cancelCommand;
-
+        /// <summary>
+        /// Отменяет изменения и закрывает диалоговое окно
+        /// </summary>
         public DelegateCommand CancelCommand =>
            _cancelCommand ??= _cancelCommand = new(ExecuteCancelCommand);
 
@@ -39,8 +52,6 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             result.Parameters.Add(CommonTypesPrism.EditableRecord, _originalRecord);
             RaiseRequestClose(result);
         }
-
-
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {

@@ -4,11 +4,13 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using ShopUI.Core;
-using ShopUI.Services.Interfaces;
 using System.Windows;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
+    /// <summary>
+    /// Статус бар приложения
+    /// </summary>
     public class StatusBarViewModel:BindableBase
     {        
         private readonly IDialogService _dialogService;

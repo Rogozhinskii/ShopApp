@@ -6,10 +6,20 @@ using ShopUI.Core.MVVM;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
+    /// <summary>
+    /// диалоговое окна редактирования покупателя
+    /// </summary>
     public class AddEditCustomerDialogViewModel:DialogViewModel
     {
+        /// <summary>
+        /// исходный экземпляр покупателя
+        /// </summary>
         private Customer _originalCustomer;
         private Customer _currentCustomer;
+
+        /// <summary>
+        /// Текущий редактируемый покупатель
+        /// </summary>
         public Customer CurrentCustomer
         {
             get { return _currentCustomer; }
@@ -17,6 +27,9 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         }
 
         private DelegateCommand _saveChangesCommand;
+        /// <summary>
+        /// Выполняет сохранение изменений
+        /// </summary>
         public DelegateCommand SaveChangesCommand =>
            _saveChangesCommand ??= _saveChangesCommand = new(ExecuteSaveChangesCommand);
         void ExecuteSaveChangesCommand()
@@ -27,6 +40,10 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         }
 
         private DelegateCommand _cancelCommand;
+
+        /// <summary>
+        /// Отменяет изменения и закрывает диалоговое окно
+        /// </summary>
         public DelegateCommand CancelCommand =>
            _cancelCommand ??= _cancelCommand = new(ExecuteCancelCommand);
         void ExecuteCancelCommand()

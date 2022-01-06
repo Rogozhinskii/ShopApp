@@ -22,6 +22,10 @@ namespace ShopUI.Modules.Customers.ViewModels
         private readonly IRepositoryManager _repositoryManager;       
         private readonly IEventAggregator _eventAggregator;
         private IRepository<Product> _productRepository;
+
+        /// <summary>
+        /// событие для обновления данных в гриде
+        /// </summary>
         public event EventHandler sourseUpdateEvent;
         private Customer _productsOwner;
         public ProductsViewModel(IRepositoryManager repositoryManager, IDialogService dialogService,IEventAggregator eventAggregator)
@@ -35,6 +39,11 @@ namespace ShopUI.Modules.Customers.ViewModels
             _eventAggregator.GetEvent<OnCustomerDeleted>().Subscribe(async (obj) => await OnCustomerDeleted(obj));
         }
 
+        /// <summary>
+        /// при удалении покупателя удаляются все его хранящиеся покупки
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         private async Task OnCustomerDeleted(Customer obj)
         {
             if(obj == null) return;
@@ -54,7 +63,11 @@ namespace ShopUI.Modules.Customers.ViewModels
            
 
         }
-
+        /// <summary>
+        /// Обновление записей в гриде при смене покупателя
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         private async Task OnSelectedCustomerChangedAsync(Customer obj)
         {
             _productsOwner=obj;
@@ -65,6 +78,9 @@ namespace ShopUI.Modules.Customers.ViewModels
         }
 
         private ObservableCollection<Product> _products;
+        /// <summary>
+        /// Коллекция продуктов
+        /// </summary>
         public ObservableCollection<Product> Products
         {
             get { return _products; }
@@ -73,6 +89,9 @@ namespace ShopUI.Modules.Customers.ViewModels
 
         private DelegateCommand<object> _editRecordCommand;
 
+        /// <summary>
+        /// Вызывает окно редактирования записи продукта
+        /// </summary>
         public DelegateCommand<object> EditRecordCommand =>
            _editRecordCommand ??= _editRecordCommand = new DelegateCommand<object>(ExecuteEditRecordCommand);
 
@@ -101,11 +120,10 @@ namespace ShopUI.Modules.Customers.ViewModels
             }
 
         }
-
-
-
         private DelegateCommand<object> _deleteRecordCommand;
-
+        /// <summary>
+        /// удаляет запись с продуктом
+        /// </summary>
         public DelegateCommand<object> DeleteRecordCommand =>
            _deleteRecordCommand ??= _deleteRecordCommand = new DelegateCommand<object>(async (obj) => await ExecuteDeleteRecordCommand(obj));
 
@@ -123,8 +141,9 @@ namespace ShopUI.Modules.Customers.ViewModels
 
 
         private DelegateCommand _addNewProduct;
-        
-
+        /// <summary>
+        /// Добавляет новую запись с продуктом
+        /// </summary>
         public DelegateCommand AddNewProduct =>
            _addNewProduct ??= _addNewProduct = new(ExecuteAddNewProduct);
 

@@ -32,8 +32,8 @@ namespace ShopLibrary.Authentication
                 Salt = saltText,
                 SaltedHashedPassword = saltedhashedPassword,
             };
-            var newUserId=await _usersRepository.Insert(newUser);
-            if (newUserId != 0)
+            var insertResult=await _usersRepository.Insert(newUser);
+            if (insertResult != 0)
                 return true;
             return false;
         }
@@ -45,6 +45,12 @@ namespace ShopLibrary.Authentication
             return saltedhashedPassword == user.SaltedHashedPassword;
         }
 
+        /// <summary>
+        /// Возвращается хешированный пароль с "солью"
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
         private static string SaltAndHashPassword(SecureString password, string salt)
         {
             var sha=SHA256.Create();

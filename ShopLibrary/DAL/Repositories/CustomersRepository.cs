@@ -1,5 +1,4 @@
-﻿using ShopLibrary.DAO.interfaces;
-using ShopLibrary.Models;
+﻿using ShopLibrary.Models;
 using System.Data;
 using System.Data.Common;
 
@@ -7,11 +6,8 @@ namespace ShopLibrary.DAL.Repositories
 {
     public class CustomersRepository : Repository<Customer>
     {
-        public CustomersRepository(DbProviderFactory factory, string connectionString) 
-            : base(factory, connectionString)
-        {
-        }
-
+        public CustomersRepository(DbProviderFactory factory, string connectionString)
+            : base(factory, connectionString) { }
        
 
         public override async Task<List<Customer>> Select()
@@ -46,8 +42,7 @@ namespace ShopLibrary.DAL.Repositories
             }
             finally{
                 CloseConnection();
-            }
-            
+            }            
             return retval;
         }
         public override async Task<int> Insert(Customer entity)

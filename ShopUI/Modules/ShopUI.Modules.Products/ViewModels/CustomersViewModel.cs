@@ -16,6 +16,9 @@ using System.Windows;
 
 namespace ShopUI.Modules.Products.ViewModels
 {
+    /// <summary>
+    /// ViewModel для работы с покупателями
+    /// </summary>
     public class CustomersViewModel : ViewModelBase
     {
         private readonly IRepositoryManager _repositoryManager;
@@ -30,6 +33,9 @@ namespace ShopUI.Modules.Products.ViewModels
         }
 
         private ObservableCollection<Customer> _customers;
+        /// <summary>
+        /// коллекция покупателей
+        /// </summary>
         public ObservableCollection<Customer> Customers
         {
             get { return _customers; }
@@ -47,6 +53,9 @@ namespace ShopUI.Modules.Products.ViewModels
         }
 
         private DelegateCommand _editCustomerCommand;
+        /// <summary>
+        /// Вызывает окна редактирования покупателя
+        /// </summary>
         public DelegateCommand EditCustomerCommand =>
            _editCustomerCommand ??= _editCustomerCommand = new(ExecuteEditCustomerCommand);
         private void ExecuteEditCustomerCommand()
@@ -67,6 +76,9 @@ namespace ShopUI.Modules.Products.ViewModels
         }
 
         private DelegateCommand _deleteCustomerCommand;
+        /// <summary>
+        /// выполняет удаление покупателя
+        /// </summary>
         public DelegateCommand DeleteCustomerCommand =>
            _deleteCustomerCommand ??= _deleteCustomerCommand = new(async()=> await ExecuteDeleteCustomerCommandAsync());
         async Task ExecuteDeleteCustomerCommandAsync()
@@ -83,6 +95,9 @@ namespace ShopUI.Modules.Products.ViewModels
         }
 
         private DelegateCommand _addNewCustomerCommand;
+        /// <summary>
+        /// добавляет нового покупателя
+        /// </summary>
         public DelegateCommand AddNewCustomerCommand =>
            _addNewCustomerCommand ??= _addNewCustomerCommand = new(ExecuteAddNewCustomerCommand);
         void ExecuteAddNewCustomerCommand()
@@ -108,8 +123,10 @@ namespace ShopUI.Modules.Products.ViewModels
             
         }
 
-
-
+        /// <summary>
+        /// Обновляет коллекию покупателей
+        /// </summary>
+        /// <returns></returns>
         private async Task UpdateData(){
             Customers = new(await _customersRepository.Select());            
         }

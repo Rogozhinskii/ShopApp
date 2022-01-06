@@ -5,6 +5,9 @@ using ShopUI.Core.MVVM;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
+    /// <summary>
+    /// Модель диалогового окна ошибок
+    /// </summary>
     public class ErrorNotificationViewModel : DialogViewModel
     {
         public ErrorNotificationViewModel() { }

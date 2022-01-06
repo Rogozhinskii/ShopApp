@@ -1,5 +1,4 @@
-﻿using ShopUI.Modules.Products.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace ShopUI.Modules.Products.Views
 {

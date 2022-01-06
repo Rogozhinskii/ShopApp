@@ -6,20 +6,32 @@ namespace ShopLibrary.Services
 {
     public static class ProviderFactoryService  
     {
-        
+        #region пространства имен поставщиков 
         private const string SQLProvider = "System.Data.SqlClient";
         private const string OleProvider = "System.Data.OleDb";
+        #endregion
 
         static ProviderFactoryService()
         {
             RegisterFactories();
         }
 
+        /// <summary>
+        /// Регистрирует провайдера и фабрику создания экземпляров методов поставщиков, реализующих источник данных
+        /// </summary>
+        /// <param name="assemblyName"></param>
+        /// <param name="dbProviderFactory"></param>
         public static void RegisterFactory(string assemblyName, DbProviderFactory dbProviderFactory)
         {
             DbProviderFactories.RegisterFactory(assemblyName, dbProviderFactory);
         }
 
+        /// <summary>
+        /// Возвращает зарегистрированную фабрику поставщика по типу источника данных
+        /// </summary>
+        /// <param name="databaseType"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public static DbProviderFactory GetFactory(DatabaseType databaseType)
         {
             return databaseType switch
@@ -29,10 +41,7 @@ namespace ShopLibrary.Services
                 _ => throw new NotImplementedException()
             };
         }
-
-        public static DbProviderFactory GetFactory(string providerName) =>
-            DbProviderFactories.GetFactory(providerName);
-
+                
         private static void RegisterFactories()
         {
             DbProviderFactories.RegisterFactory(SQLProvider, SqlClientFactory.Instance);
