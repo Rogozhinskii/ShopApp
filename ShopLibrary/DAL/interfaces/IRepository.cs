@@ -7,8 +7,7 @@ namespace ShopLibrary.DAO.interfaces
         public string ConnectionString { get;}
         public ConnectionState ConnectionState { get; }
         public IDbDataAdapter DataAdapter { get; }
-        public T GetById(int id);
-        public T Find(object value);
+        public T GetById(int id);       
         public Task<List<T>> Select();       
         public Task<List<T>> Select(string fieldName, object value);
         public Task<bool> Update(T entity);

@@ -1,13 +1,12 @@
-﻿using ShopLibrary.Services.Interfaces;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 
 namespace ShopLibrary.Services
 {
-    public static class ProviderFactoryService  //IProviderFactoryService
+    public static class ProviderFactoryService  
     {
-        //private const string SQLProvider = "Microsoft.Data.SqlClient";
+        
         private const string SQLProvider = "System.Data.SqlClient";
         private const string OleProvider = "System.Data.OleDb";
 

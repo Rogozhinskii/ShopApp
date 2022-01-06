@@ -1,5 +1,8 @@
 ﻿namespace ShopUI.Core
 {
+    /// <summary>
+    /// Названия регионов для навигации
+    /// </summary>
     public static class RegionNames
     {        
         public const string CustomersRegion = "CustomersRegion";

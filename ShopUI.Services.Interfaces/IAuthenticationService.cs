@@ -2,6 +2,9 @@
 
 namespace ShopUI.Services.Interfaces
 {
+    /// <summary>
+    /// Интерфейс для регистрации в входа из UI
+    /// </summary>
     public interface IAuthenticationService
     {
         /// <summary>

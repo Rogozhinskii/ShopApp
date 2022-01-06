@@ -97,9 +97,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
            _registerUserCommand ??= _registerUserCommand = new(ExecuteRegisterUserCommand);
         void ExecuteRegisterUserCommand()
         {
-            
-            try
-            {
+            try{
                 _dialogService.Show(CommonTypesPrism.RegisterUserDialog, null, async r =>
                 {
                     r.Parameters.TryGetValue(CommonTypesPrism.UserName, out string userName);

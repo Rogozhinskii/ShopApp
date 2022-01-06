@@ -67,12 +67,7 @@ namespace ShopLibrary.DAL.Repositories
         }
 
 
-             
-
-        public virtual T Find(object value)
-        {
-            throw new NotImplementedException();
-        }
+        
                
         public virtual T GetById(int id)
         {

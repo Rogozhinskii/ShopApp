@@ -1,9 +1,10 @@
 ﻿using Prism.Mvvm;
 using Prism.Services.Dialogs;
+using ShopUI.Core.interfaces;
 
 namespace ShopUI.Core.MVVM
 {
-    public class DialogViewModel : BindableBase, IDialogAware
+    public class DialogViewModel : BindableBase, IDialogAware, NotificationDialog
     {
         public virtual string Title => "";
         protected IDialogService _dialogService;
@@ -21,10 +22,12 @@ namespace ShopUI.Core.MVVM
 
         public virtual void OnDialogOpened(IDialogParameters parameters) { }
 
-        protected void ShowNotificationDialog(DialogType dialogType,string message)
+        public void ShowNotificationDialog(DialogType dialogType, string message)
         {
-            var parameters = new DialogParameters();
-            parameters.Add(CommonTypesPrism.DialogMessage, message);
+            var parameters = new DialogParameters
+            {
+                { CommonTypesPrism.DialogMessage, message }
+            };
             switch (dialogType)
             {
                 case DialogType.NotificationDialog:
@@ -33,7 +36,10 @@ namespace ShopUI.Core.MVVM
                 case DialogType.ErrorDialog:
                     _dialogService.Show(CommonTypesPrism.ErrorNotification, parameters, null);
                     break;
-            }           
+                default:
+                    _dialogService.Show(CommonTypesPrism.ErrorNotification, parameters, null);
+                    break;
+            }
         }
     }
 }

@@ -9,44 +9,44 @@ namespace ShopLibrary.DAL.Repositories
         public UsersRepository(DbProviderFactory factory, string connectionString)
             : base(factory, connectionString) { }
 
-       
-
-        public override User Find(object value)
+        public override async Task<List<User>> Select()
         {
-            User user = new();
-            if (value != null){
-                OpenConnection();
-                string userName = value.ToString();
-                string sqlCommand = $"Select * from {TableConstants.UserTable} where userName=@userName";
-                using var cmd = GetCommand();
-                cmd.CommandText = sqlCommand;
-                cmd.Parameters.Add(GetParameter(nameof(userName), DbType.String, userName));
+            OpenConnection();
+            var users = new List<User>();
+            string sql = $"Select * from {TableConstants.UserTable}";
+            using(var cmd = GetCommand(sql))
+            {
                 try
                 {
-                    var reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        user = new()
+                        while (reader.Read())
                         {
-                            Name = reader["userName"].ToString(),
-                            Salt = reader["salt"].ToString(),
-                            SaltedHashedPassword = reader["saltedHashedPassword"].ToString()
-                        };
-
+                            User user = new()
+                            {
+                                Name = reader["userName"].ToString(),
+                                Salt = reader["salt"].ToString(),
+                                SaltedHashedPassword = reader["saltedHashedPassword"].ToString()
+                            };
+                            users.Add(user);
+                        }
                     }
+                   
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
+                catch (InvalidOperationException ex)
                 {
                     CloseConnection();
+                    throw new InvalidOperationException($"Can select user. {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    CloseConnection();
+                    throw new Exception($"Can select user.{ex.Message}");
                 }
             }
-            
-            return user;
+            return users;
         }
+
 
         
 
@@ -55,22 +55,28 @@ namespace ShopLibrary.DAL.Repositories
             OpenConnection();
             string sql = $"Insert Into {TableConstants.UserTable} (userName,salt,saltedHashedPassword)" +
                         $"values(@userName,@salt,@saltedHashedPassword)";
-            using(var cmd = GetCommand(sql))
-            {                
+            using (var cmd = GetCommand(sql))
+            {
                 cmd.Parameters.Add(GetParameter("userName", DbType.String, entity.Name));
                 cmd.Parameters.Add(GetParameter("salt", DbType.String, entity.Salt));
                 cmd.Parameters.Add(GetParameter("saltedHashedPassword", DbType.String, entity.SaltedHashedPassword));
-                try{                    
+                try
+                {
                     var newRecordId = await cmd.ExecuteNonQueryAsync();
                     if ((int)newRecordId != 0)
                         return (int)newRecordId;
-                }               
-                catch (Exception ex){
+                }
+                catch (InvalidOperationException ex)
+                {
                     CloseConnection();
-                    throw new InvalidOperationException($"Can`t insert data to DB. Object",ex.InnerException);                   
+                    throw new InvalidOperationException($"Can`t register user. Object {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    CloseConnection();
+                    throw new Exception($"Can`t register user. Object {ex.Message}");
                 }
             }
-
             return 0;
         }
 

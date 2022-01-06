@@ -1,5 +1,8 @@
 ﻿namespace ShopUI.Core
 {
+    /// <summary>
+    /// Общие константы для диалоговых окон и параметров
+    /// </summary>
     public static class CommonTypesPrism
     {
         public const string CustomersView = "CustomersView";

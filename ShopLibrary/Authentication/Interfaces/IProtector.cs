@@ -16,6 +16,6 @@ namespace ShopLibrary.Authentication.Interfaces
         /// <summary>
         /// Возвращает true если пользователей найден в базе и пароль введен верно, иначе false
         /// </summary>       
-        public bool LogIn(string userName, SecureString password);
+        public Task<bool> LogIn(string userName, SecureString password);
     }
 }

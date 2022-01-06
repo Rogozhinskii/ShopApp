@@ -1,4 +1,5 @@
 ﻿using ShopLibrary.Authentication.Interfaces;
+using ShopLibrary.DAL.Extensions;
 using ShopLibrary.DAO.interfaces;
 using ShopLibrary.Models;
 using System.Security;
@@ -17,8 +18,8 @@ namespace ShopLibrary.Authentication
         }
         public async Task<bool> Register(string userName,SecureString password)
         {
-            var foundedUser = _usersRepository.Find(userName);
-            if(foundedUser.Name== userName)
+            var foundedUser = (await _usersRepository.Select(x => x.Name == userName));
+            if (foundedUser.Any())
                 throw new Exception("Пользователь с таким именем зарегистрирован");
             var rnd=RandomNumberGenerator.Create();
             var saltBytes=new byte[16];
@@ -37,13 +38,9 @@ namespace ShopLibrary.Authentication
             return false;
         }
 
-        public bool LogIn(string userName,SecureString password)
+        public async Task<bool> LogIn(string userName,SecureString password)
         {
-            var user= _usersRepository.Find(userName);
-            if (user.Name != userName)
-            {
-                return false;
-            }
+            var user = (await _usersRepository.Select(x => x.Name == userName)).First();
             var saltedhashedPassword = SaltAndHashPassword(password, user.Salt);
             return saltedhashedPassword == user.SaltedHashedPassword;
         }

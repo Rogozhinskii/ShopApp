@@ -42,6 +42,10 @@ namespace ShopUI
             e.Handled = true;
         }
 
+        /// <summary>
+        /// Регистрация сервисов
+        /// </summary>
+        /// <param name="containerRegistry"></param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             if (containerRegistry != null)
@@ -54,6 +58,10 @@ namespace ShopUI
             }
         }
 
+        /// <summary>
+        /// Подключение модулей
+        /// </summary>
+        /// <param name="moduleCatalog"></param>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             moduleCatalog.AddModule<CustomersModule>();

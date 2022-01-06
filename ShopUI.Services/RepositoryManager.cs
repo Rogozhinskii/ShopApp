@@ -2,7 +2,6 @@
 using ShopLibrary.DAO.interfaces;
 using ShopLibrary.Models;
 using ShopLibrary.Services;
-using ShopLibrary.Services.Interfaces;
 using ShopUI.Core;
 using ShopUI.Services.Interfaces;
 using System.Configuration;
@@ -10,8 +9,7 @@ using System.Configuration;
 namespace ShopUI.Services
 {
     public class RepositoryManager : IRepositoryManager
-    {
-        public IUsersService _usersService;        
+    {             
         private readonly IRepository<Customer> _customersRepository;
         private readonly IRepository<Product> _productsRepository;
         private readonly IRepository<User> _usersRepository;

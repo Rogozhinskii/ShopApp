@@ -13,6 +13,13 @@ namespace ShopUI.ViewModels
         private readonly IRegionManager _regionManager;
         private readonly IDialogService _dialogService;
 
+
+        public MainWindowViewModel(IRegionManager regionManager, IDialogService dialogService)
+        {
+            _regionManager = regionManager;
+            _dialogService = dialogService;
+        }
+
         public string Title
         {
             get { return _title; }
@@ -20,7 +27,9 @@ namespace ShopUI.ViewModels
         }
 
         private bool _isSignedIn;
-
+        /// <summary>
+        /// Флаг был ли выполнен вход в приложение
+        /// </summary>
         public bool IsSignedIn
         {
             get { return _isSignedIn; }
@@ -32,18 +41,11 @@ namespace ShopUI.ViewModels
             }
         }
 
-
-        private bool _isProductsTabSelected;
-        public bool IsProductsTabSelected
-        {
-            get { return _isProductsTabSelected; }
-            set {SetProperty(ref _isProductsTabSelected, value);}
-        }
-
-         
-
         private DelegateCommand _startApplicationCommand;
 
+        /// <summary>
+        /// Вызывает окно входа в приложение при запуске. При неудачной попытке закрывает приложение
+        /// </summary>
         public DelegateCommand StartApplicationCommand =>
            _startApplicationCommand ??= _startApplicationCommand = new(ExecuteStartApplicationCommand);
 
@@ -59,13 +61,5 @@ namespace ShopUI.ViewModels
              });
         }
 
-
-
-
-        public MainWindowViewModel(IRegionManager regionManager, IDialogService dialogService)
-        {
-            _regionManager = regionManager;
-            _dialogService = dialogService;
-        }
     }
 }
