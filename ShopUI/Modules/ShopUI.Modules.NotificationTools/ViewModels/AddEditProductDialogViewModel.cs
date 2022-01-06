@@ -6,7 +6,7 @@ using ShopUI.Core.MVVM;
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
-    internal class AddEditDialogViewModel:DialogViewModel
+    internal class AddEditProductDialogViewModel:DialogViewModel
     {
         private Product _originalRecord;
         private Product _product;
@@ -14,28 +14,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         {
             get { return _product; }
             set { SetProperty(ref _product, value); }
-        }
-
-        //private string _email;
-        //public string Email
-        //{
-        //    get { return _email; }
-        //    set { SetProperty(ref _email, value); }
-        //}
-
-        //private int _productCode;
-        //public int ProductCode
-        //{
-        //    get { return _productCode; }
-        //    set { SetProperty(ref _productCode, value); }
-        //}
-
-        //private string _description;
-        //public string Description
-        //{
-        //    get { return _description; }
-        //    set { SetProperty(ref _description, value); }
-        //}
+        }       
 
         private DelegateCommand _saveChangesCommand;
 

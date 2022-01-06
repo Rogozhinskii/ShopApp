@@ -60,7 +60,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
 
         async void ExecuteLogInCommand()
         {
-            IDialogResult result = new DialogResult();
+            
             bool isSignedIf = false;
             if (!isSignedIf)
             {
@@ -80,7 +80,8 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
                 }
 
             }
-            result.Parameters.Add(CommonTypesPrism.logInResult, isSignedIf);
+            DialogResult result = new DialogResult(ButtonResult.OK);
+            result.Parameters.Add(CommonTypesPrism.logInResult, isSignedIf);            
             RaiseRequestClose(result);           
         }
 

@@ -9,7 +9,7 @@
             <converters:FullNameConverter x:Key="FullNameConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <materialDesign:Chip>
+    <materialDesign:Chip Cursor="Hand">        
         <materialDesign:Chip.Icon>
             <Image Source="/ShopUI.Modules.ModuleName;component/Controls/unknown.png"/>
         </materialDesign:Chip.Icon>
@@ -17,6 +17,6 @@
             <Binding Path="Name"/>
             <Binding Path="Surname"/>
             <Binding Path="Patronymic"/>
-        </MultiBinding>
+        </MultiBinding>        
     </materialDesign:Chip>
 </UserControl>

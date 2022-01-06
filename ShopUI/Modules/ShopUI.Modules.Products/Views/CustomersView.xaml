@@ -4,9 +4,8 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:controls="clr-namespace:ShopUI.Modules.Customers.Controls" 
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:converters="clr-namespace:ShopUI.Core.Converters;assembly=ShopUI.Core"
-             >
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:converters="clr-namespace:ShopUI.Core.Converters;assembly=ShopUI.Core">
     <UserControl.Resources>
         <converters:IsCheckedConverter x:Key="boolConverter"/>
     </UserControl.Resources>
@@ -17,16 +16,30 @@
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0">
             <ListView ItemsSource="{Binding Customers}"
+                      SelectedItem="{Binding SelectedCustomer}"
                       Margin="10"
-                      x:Name="_customersList">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <prism:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=_customersList,Path=SelectedItem}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListView.ItemTemplate>
+                      x:Name="_customersList">                
+                <ListView.ItemTemplate>                    
                     <DataTemplate>
-                        <controls:CustomerItem/>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="250">
+                                <controls:CustomerItem/>
+                            </Border>
+                            <Border>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource MaterialDesignIconButton}"
+                                            ToolTip="Edit Customer"
+                                            Command="{Binding DataContext.EditCustomerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
+                                        <materialDesign:PackIcon Kind="Edit" Width="18" Height="18"/>
+                                    </Button>
+                                    <Button Style="{StaticResource MaterialDesignIconButton}"
+                                            ToolTip="Delete Customer"
+                                            Command="{Binding DataContext.DeleteCustomerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}">
+                                        <materialDesign:PackIcon Kind="Delete" Width="18" Height="18"/>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>                        
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

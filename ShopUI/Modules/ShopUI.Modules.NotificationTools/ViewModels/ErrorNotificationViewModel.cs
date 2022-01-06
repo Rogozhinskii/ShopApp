@@ -33,7 +33,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {
-            Message = parameters.GetValue<string>(CommonTypesPrism.message);
+            Message = parameters.GetValue<string>(CommonTypesPrism.DialogMessage);
         }
     }
 

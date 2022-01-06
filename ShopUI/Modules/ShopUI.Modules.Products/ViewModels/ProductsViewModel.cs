@@ -2,7 +2,7 @@
 using Prism.Commands;
 using Prism.Events;
 using Prism.Services.Dialogs;
-using ShopLibrary.DAL;
+using ShopLibrary.DAL.Extensions;
 using ShopLibrary.DAO.interfaces;
 using ShopLibrary.Models;
 using ShopUI.Core;
@@ -33,13 +33,37 @@ namespace ShopUI.Modules.Customers.ViewModels
             _productRepository = _repositoryManager.GetRepository(RepositoryType.Products) as IRepository<Product>;
             Products = new ObservableCollection<Product>();
             _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Subscribe(async (obj) =>await OnSelectedCustomerChangedAsync(obj));
+            _eventAggregator.GetEvent<OnCustomerDeleted>().Subscribe(async (obj) => await OnCustomerDeleted(obj));
+        }
+
+        private async Task OnCustomerDeleted(Customer obj)
+        {
+            if(obj == null) return;
+            var parameters = new DialogParameters();
+            try
+            {
+                var deleteResult = await _productRepository.Delete(x => x.Email == obj.Email);
+                if (deleteResult)
+                {
+                    parameters.Add(CommonTypesPrism.DialogMessage, "Записи удалены");
+                    _dialogService.Show(CommonTypesPrism.NotificationDialog, parameters, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                parameters.Add(CommonTypesPrism.DialogMessage, ex.Message);                
+                _dialogService.Show(CommonTypesPrism.ErrorNotification,parameters, null);
+                throw;
+            }
+           
+
         }
 
         private async Task OnSelectedCustomerChangedAsync(Customer obj)
         {
             _productsOwner=obj;
             Products.Clear();
-            var uploadedProducts = await _productRepository.Select(TableConstants.emailField, _productsOwner.Email);
+            var uploadedProducts = await _productRepository.Select(x=>x.Email==_productsOwner.Email);
             Products.AddRange(uploadedProducts);
             sourseUpdateEvent.Invoke(this, new EventArgs());
         }

@@ -26,6 +26,7 @@ namespace ShopUI.Services
             _customersRepository = new CustomersRepository(sqlFactory, sqlConnection.ConnectionString);
             _productsRepository = new ProductsRepository(ProviderFactoryService.GetFactory(DatabaseType.MsAccess), accessConnection.ConnectionString);
             Repositories.Add(_customersRepository);
+            Repositories.Add(_productsRepository);
         }
 
         public object GetRepository(RepositoryType repositoryType)

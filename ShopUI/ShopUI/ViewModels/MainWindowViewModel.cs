@@ -53,7 +53,7 @@ namespace ShopUI.ViewModels
              {
                  IsSignedIn = result.Parameters.GetValue<bool>(CommonTypesPrism.logInResult);
                  IsSignedIn = true;
-                 if (IsSignedIn == false)
+                 if (IsSignedIn == false || result.Result!=ButtonResult.OK)
                  {
                      Application.Current.Shutdown();
                  }

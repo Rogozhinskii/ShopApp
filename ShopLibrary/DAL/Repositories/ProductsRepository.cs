@@ -1,15 +1,57 @@
-﻿using ShopLibrary.Models;
+﻿using ShopLibrary.DAO.interfaces;
+using ShopLibrary.Models;
 using System.Data;
 using System.Data.Common;
 
 namespace ShopLibrary.DAL.Repositories
 {
+    public static class DeleteExtencion
+    {
+        
+    }
+
     public class ProductsRepository:Repository<Product>
     {
         public ProductsRepository(DbProviderFactory factory, string connectionString) :base(factory,connectionString)
         {            
         }
 
+        public override async Task<List<Product>> Select()
+        {
+            List<Product> products = new();
+            string sql = $"Select * from {TableConstants.ProductsTable}";
+            using (var cmd = GetCommand(sql))
+            {
+                try
+                {                   
+                    using var reader = await cmd.ExecuteReaderAsync();
+                    while (reader.Read())
+                    {
+                        var product = new Product();
+                        product.Id = (int)reader["id"];
+                        product.Email = reader.GetString("email");
+                        product.Description = reader.GetString("description");
+                        product.ProductCode = (int)reader["productCode"];
+
+                        products.Add(new Product
+                        {
+                            Id = (int)reader["id"],
+                            Email = reader.GetString("email"),
+                            Description = reader.GetString("description"),
+                            ProductCode = (int)reader["productCode"]
+                        });
+                    }
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+
+            }
+            return products;
+        }
 
         public override async Task<List<Product>> Select(string fieldName, object value)
         {
@@ -58,25 +100,26 @@ namespace ShopLibrary.DAL.Repositories
             string sqlInsert = $"Insert into {TableConstants.ProductsTable} (email,productCode,description)" +
                        $"values(@email,@productCode,@description)";
             string sqlIdentity = $"SELECT @@identity FROM {TableConstants.ProductsTable}";
-            using (var cmd = GetCommand(sqlInsert)){
+            using (var cmdInsert = GetCommand(sqlInsert)){
                 using var cmdIdentity=GetCommand(sqlIdentity);                //MSAccess не поддерживает возвращаемый параметр
-                cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
-                cmd.Parameters.Add(GetParameter("productCode", DbType.Int32, entity.ProductCode));
-                cmd.Parameters.Add(GetParameter("description", DbType.String, entity.Description));
-                try{
-                    var insertResult = await cmd.ExecuteNonQueryAsync();                    
-                    if (insertResult != 0){
-                        int id= (int)await cmdIdentity.ExecuteScalarAsync();
-                        return id;
-                    }
-                       
+                cmdInsert.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
+                cmdInsert.Parameters.Add(GetParameter("productCode", DbType.Int32, entity.ProductCode));
+                cmdInsert.Parameters.Add(GetParameter("description", DbType.String, entity.Description));
+                DbTransaction transaction = (DbTransaction)_connection.BeginTransaction();
+                try
+                {
+                    cmdInsert.Transaction = transaction;
+                    cmdIdentity.Transaction= transaction;
+                    await cmdInsert.ExecuteNonQueryAsync();
+                    int newRecordId=(int)await cmdIdentity.ExecuteScalarAsync();
+                    transaction.Commit();
+                    return newRecordId;  
                 }
                 catch (InvalidOperationException){
-                    CloseConnection();
-                    return 0;
+                    CloseConnection(); transaction?.Rollback();                  
                 }
-                catch(Exception ex){
-                    CloseConnection();
+                catch(Exception){
+                    CloseConnection(); transaction?.Rollback();
                 }
             }
             return 0;
@@ -117,8 +160,7 @@ namespace ShopLibrary.DAL.Repositories
                 cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
                 cmd.Parameters.Add(GetParameter("productCode", DbType.Int32, entity.ProductCode));
                 cmd.Parameters.Add(GetParameter("id", DbType.Int32, entity.Id));
-                try
-                {
+                try{
                     int rowUpdated = await cmd.ExecuteNonQueryAsync();
                     if(rowUpdated != 0) result = true;
                 }

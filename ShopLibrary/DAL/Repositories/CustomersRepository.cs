@@ -7,7 +7,6 @@ namespace ShopLibrary.DAL.Repositories
 {
     public class CustomersRepository : Repository<Customer>
     {
-        private DbDataAdapter _dbAdapter;
         public CustomersRepository(DbProviderFactory factory, string connectionString) 
             : base(factory, connectionString)
         {
@@ -17,6 +16,7 @@ namespace ShopLibrary.DAL.Repositories
 
         public override async Task<List<Customer>> Select()
         {
+            OpenConnection();
             List<Customer> retval = new();
             string sql = $"Select * from {TableConstants.CustomersTable}";
             try
@@ -37,7 +37,8 @@ namespace ShopLibrary.DAL.Repositories
                 }
             }
             catch (InvalidOperationException){
-                CloseConnection();               
+                CloseConnection();
+                throw;
             }
             catch(Exception){
                 CloseConnection();
@@ -80,6 +81,58 @@ namespace ShopLibrary.DAL.Repositories
 
             }
             return 0;
+        }
+
+        public override async Task<bool> Delete(Customer entity)
+        {
+            OpenConnection();
+            string sql = $"Delete from {TableConstants.CustomersTable} where id=@id";
+            using(var cmd = GetCommand(sql))
+            {
+                cmd.Parameters.Add(GetParameter("id", DbType.Int32, entity.Id));
+                try{
+                    var deleteResult=await cmd.ExecuteNonQueryAsync();
+                    if ((int)deleteResult != 0)
+                        return true;
+                }
+                catch (Exception){
+                    CloseConnection();
+                    throw;
+                }
+            }
+            return false;
+        }
+
+        public override async Task<bool> Update(Customer entity)
+        {
+            OpenConnection();
+            if (entity == null)
+                return false;
+            string sql = $"Update {TableConstants.CustomersTable} set surname=@surname," +
+                                                                    $"name=@name," +
+                                                                    $"patronymic=@patronymic, " +
+                                                                    $"phoneNumber=@phoneNumber, " +
+                                                                    $"email=@email " +
+                                                                    $"where id=@id";
+            using(var cmd = GetCommand(sql)){
+                cmd.Parameters.Add(GetParameter("surname", DbType.String, entity.Surname));
+                cmd.Parameters.Add(GetParameter("name", DbType.String, entity.Name));
+                cmd.Parameters.Add(GetParameter("patronymic", DbType.String, entity.Patronymic));
+                cmd.Parameters.Add(GetParameter("phoneNumber", DbType.String, entity.PhoneNumber??""));
+                cmd.Parameters.Add(GetParameter("email", DbType.String, entity.Email));
+                cmd.Parameters.Add(GetParameter("id", DbType.Int32, entity.Id));
+                try{
+                    var result =await cmd.ExecuteNonQueryAsync();
+                    if(result!=0)
+                        return true;
+                }
+                catch (Exception){
+                    CloseConnection();
+                    throw;
+                }
+                return false;
+            }
+                                                                    
         }
     }
 }
