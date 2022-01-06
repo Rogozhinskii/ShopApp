@@ -70,7 +70,8 @@ namespace ShopUI.Modules.Products.ViewModels
                  var updateResult = await _customersRepository.Update(editableCustomer);
                  if (updateResult)
                  {
-                    await UpdateData();
+                     _eventAggregator.GetEvent<OnCustomerEdited>().Publish(editableCustomer);
+                     await UpdateData();
                  }
              });
         }

@@ -37,6 +37,22 @@ namespace ShopUI.Modules.Customers.ViewModels
             Products = new ObservableCollection<Product>();
             _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Subscribe(async (obj) =>await OnSelectedCustomerChangedAsync(obj));
             _eventAggregator.GetEvent<OnCustomerDeleted>().Subscribe(async (obj) => await OnCustomerDeleted(obj));
+            _eventAggregator.GetEvent<OnCustomerEdited>().Subscribe(async (obj) => await OnCustomerEdited(obj));
+        }
+
+        private async Task OnCustomerEdited(Customer obj)
+        {
+            if (obj == null) return;
+            try
+            {
+                Products.ToList().ForEach(p =>p.Email = obj.Email);
+                var updateResult = await _productRepository.UpdateMany(Products); //обновляем email
+                sourseUpdateEvent.Invoke(this, new EventArgs());
+            }
+            catch (Exception ex){
+                ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);
+                
+            }
         }
 
         /// <summary>

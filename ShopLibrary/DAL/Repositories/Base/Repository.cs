@@ -10,16 +10,8 @@ namespace ShopLibrary.DAL.Repositories
         /// Для доступа к методам создания объектов работы с БД поставщиков, реализующих источник данных
         /// </summary>
         protected readonly DbProviderFactory _providerFactory;
-        protected readonly string _conectionString;
-
-        /// <summary>
-        /// Возвращает строку подключения, на основе которой созданно хранилище
-        /// </summary>
-        public string ConnectionString => _conectionString;
-
-        /// <summary>
-        /// Возвращает состояние соединения
-        /// </summary>
+        protected readonly string _conectionString;        
+        public string ConnectionString => _conectionString;       
         public ConnectionState ConnectionState => _connection.State;
         /// <summary>
         /// Подключение в источнику данных
@@ -93,12 +85,6 @@ namespace ShopLibrary.DAL.Repositories
             return parameter;
         }
 
-        /// <summary>
-        /// Выполняет множественную запись в источник данных
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public virtual async Task<bool> InsertMany(IEnumerable<T> entities)
         {
             bool result = false;
@@ -111,48 +97,37 @@ namespace ShopLibrary.DAL.Repositories
             return result;
         }
 
-        /// <summary>
-        /// Выполняет обновление записи в источнике данных
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        
         public virtual Task<bool> Update(T entity)
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Выполняет удаление записи из источника данных 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+               
         public virtual Task<bool> Delete(T entity)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Выполняет выборку всех записей из источнкиа данных
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public virtual Task<List<T>> Select()
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Выполняет вставку новой записи в источник данных
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public virtual Task<int> Insert(T entity)
         {
             throw new NotImplementedException();
         }
 
+        public async Task<bool> UpdateMany(IEnumerable<T> entities)
+        {
+            bool result = false;
+            foreach (T item in entities)
+            {
+                bool updateResult = await Update(item);
+                if (!updateResult)
+                    throw new InvalidOperationException($"Can`t update data to DB. Object {item.GetType()}");
+            }
+            return result;
+        }
     }
 }

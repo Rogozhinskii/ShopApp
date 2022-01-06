@@ -43,5 +43,14 @@ namespace ShopLibrary.DAL.Extensions
             var selectedRecords= await repository.Select();            
             return selectedRecords.Where(predicate).ToList();
         }
+
+        public static async Task<List<T>> Update<T>(this IRepository<T> repository, Func<T, bool> predicate,object newValue)
+        {
+            var selectedRecords = await repository.Select();
+            var updatableRecords= selectedRecords.Where(predicate).ToList();
+           
+            return selectedRecords.Where(predicate).ToList();
+        }
+
     }
 }
