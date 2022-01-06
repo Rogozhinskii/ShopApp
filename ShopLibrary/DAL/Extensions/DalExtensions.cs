@@ -32,7 +32,7 @@ namespace ShopLibrary.DAL.Extensions
         }
 
         /// <summary>
-        /// производит выборку записей из бд, соответующих predicate, возвращает список записей
+        /// Производит выборку записей из бд, соответующих predicate, возвращает список записей
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="repository"></param>
@@ -41,14 +41,6 @@ namespace ShopLibrary.DAL.Extensions
         public static async Task<List<T>> Select<T>(this IRepository<T> repository, Func<T, bool> predicate)
         {            
             var selectedRecords= await repository.Select();            
-            return selectedRecords.Where(predicate).ToList();
-        }
-
-        public static async Task<List<T>> Update<T>(this IRepository<T> repository, Func<T, bool> predicate,object newValue)
-        {
-            var selectedRecords = await repository.Select();
-            var updatableRecords= selectedRecords.Where(predicate).ToList();
-           
             return selectedRecords.Where(predicate).ToList();
         }
 
