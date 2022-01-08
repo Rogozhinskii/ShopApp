@@ -37,7 +37,7 @@ namespace ShopLibrary.DAL.Repositories
                 if (_connection == null)
                     throw new ArgumentNullException(nameof(_connection));
                 _connection.ConnectionString = _conectionString;
-                _connection.Open();
+                _connection.Open();                
             }
         }
 

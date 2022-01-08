@@ -3,12 +3,15 @@ using Prism.Modularity;
 using Prism.Services.Dialogs;
 using ShopUI.Core;
 using ShopUI.Modules.NotificationTools;
+using ShopUI.Modules.NotificationTools.ViewModels;
+using ShopUI.Modules.NotificationTools.Views;
 using ShopUI.Modules.Products;
 using ShopUI.Services;
 using ShopUI.Services.Interfaces;
 using ShopUI.Views;
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -22,7 +25,6 @@ namespace ShopUI
         private IDialogService _dialogService;
         protected override Window CreateShell()
         {
-            _dialogService = Container.Resolve<IDialogService>() ?? throw new NullReferenceException(nameof(IDialogService));
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             return Container.Resolve<MainWindow>();
         }
@@ -49,15 +51,30 @@ namespace ShopUI
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             if (containerRegistry != null)
-            {                                              
-                var connectionStrings = ConfigurationManager.ConnectionStrings;               
-                var repositoryManager = new RepositoryManager(connectionStrings);                
-                containerRegistry.RegisterInstance<IRepositoryManager>(repositoryManager);
-                containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
+            {   
+                try
+                {                    
+                    _dialogService = Container.Resolve<IDialogService>() ?? throw new NullReferenceException(nameof(IDialogService));
+                    var connectionStrings = ConfigurationManager.ConnectionStrings;
+                    var repositoryManager = new RepositoryManager(connectionStrings);
+                    containerRegistry.RegisterInstance<IRepositoryManager>(repositoryManager);
+                    containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
+                }
+                catch (Exception e)
+                {
+                    var result = MessageBox.Show(e.Message, "Fatal Error", MessageBoxButton.OK);
+                    if(result == MessageBoxResult.OK)
+                    {
+                        Process.GetCurrentProcess().Kill();
+                    }
+                   
+                }
+                
 
             }
         }
 
+        
         /// <summary>
         /// Подключение модулей
         /// </summary>
