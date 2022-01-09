@@ -21,10 +21,11 @@
             </ToolBar>
 
             <DataGrid Grid.Row="1"
-                          ItemsSource="{Binding Products,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                          AutoGenerateColumns="False" SelectionMode="Extended" x:Name="_productsList"
-                          IsReadOnly="True"
-                          >
+                      ItemsSource="{Binding ProductsView}"
+                      AutoGenerateColumns="False" SelectionMode="Extended" x:Name="_productsList"
+                      IsReadOnly="True"
+                      >
+                <!--,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}-->
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Header="IsSelected" 
                                                 Binding="{Binding Path=IsSelected,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}},Mode=OneWay}"

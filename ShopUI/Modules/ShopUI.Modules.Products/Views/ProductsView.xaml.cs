@@ -7,18 +7,11 @@ namespace ShopUI.Modules.Customers.Views
     /// Логика взаимодействия для ProductsView.xaml
     /// </summary>
     public partial class ProductsView : UserControl
-    {
-        private ProductsViewModel _vm;
+    {       
         public ProductsView()
         {
-            InitializeComponent();
-            _vm = (ProductsViewModel)_productsList.DataContext;
-            _vm.sourseUpdateEvent += ProductsCollectionUpdated;
+            InitializeComponent();           
         }
 
-        private void ProductsCollectionUpdated(object sender, System.EventArgs e)
-        {
-            _productsList.Items.Refresh();
-        }
     }
 }

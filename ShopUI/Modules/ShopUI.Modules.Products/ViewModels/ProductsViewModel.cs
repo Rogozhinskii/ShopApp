@@ -10,9 +10,11 @@ using ShopUI.Services;
 using ShopUI.Services.Interfaces;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace ShopUI.Modules.Customers.ViewModels
 {
@@ -31,25 +33,29 @@ namespace ShopUI.Modules.Customers.ViewModels
         {            
             _dialogService = dialogService;           
             _eventAggregator = eventAggregator;
-            _productRepository = productsRepository;
-             Products = new ObservableCollection<Product>(); //todo переделать
-            _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Subscribe(async (obj) =>await OnSelectedCustomerChangedAsync(obj));
-            _eventAggregator.GetEvent<OnCustomerDeleted>().Subscribe(async (obj) => await OnCustomerDeleted(obj));
-            _eventAggregator.GetEvent<OnCustomerEdited>().Subscribe(async (obj) => await OnCustomerEdited(obj));
+            _productRepository = productsRepository;            
+            _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Subscribe(OnSelectedCustomerChangedAsync);
+            //_eventAggregator.GetEvent<OnCustomerDeleted>().Subscribe(async (obj) => await OnCustomerDeleted(obj));
+            //_eventAggregator.GetEvent<OnCustomerEdited>().Subscribe(async (obj) => await OnCustomerEdited(obj));
+
+            _productsViewSourse = new CollectionViewSource();
         }
 
+
+        #region to delete
         private async Task OnCustomerEdited(Customer obj)
         {
             if (obj == null) return;
             try
             {
-                Products.ToList().ForEach(p =>p.Email = obj.Email);
+                Products.ToList().ForEach(p => p.Email = obj.Email);
                 //var updateResult = await _productRepository.UpdateMany(Products); //обновляем email
                 sourseUpdateEvent.Invoke(this, new EventArgs());
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);
-                
+
             }
         }
 
@@ -60,7 +66,7 @@ namespace ShopUI.Modules.Customers.ViewModels
         /// <returns></returns>
         private async Task OnCustomerDeleted(Customer obj)
         {
-            if(obj == null) return;
+            if (obj == null) return;
             var parameters = new DialogParameters();
             try
             {
@@ -74,21 +80,24 @@ namespace ShopUI.Modules.Customers.ViewModels
             {
                 ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);
             }
-           
+
 
         }
+        #endregion
+
+        public ICollectionView ProductsView => _productsViewSourse?.View;
+        public CollectionViewSource _productsViewSourse;
+
+
         /// <summary>
         /// Обновление записей в гриде при смене покупателя
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        private async Task OnSelectedCustomerChangedAsync(Customer obj)
+        private void OnSelectedCustomerChangedAsync(Customer obj)
         {
-            _productsOwner=obj;
-            Products.Clear();
-            //var uploadedProducts = await _productRepository.Select(x=>x.Email==_productsOwner.Email);
-            //Products.AddRange(uploadedProducts);
-            sourseUpdateEvent.Invoke(this, new EventArgs());
+            _productsOwner=obj;            
+            Products=obj.Products.ToObservableCollection();            
         }
 
         private ObservableCollection<Product> _products;
@@ -98,7 +107,14 @@ namespace ShopUI.Modules.Customers.ViewModels
         public ObservableCollection<Product> Products
         {
             get { return _products; }
-            set {SetProperty(ref _products, value);}
+            set 
+            {
+                if(SetProperty(ref _products, value))
+                {
+                    _productsViewSourse.Source = value;
+                    RaisePropertyChanged(nameof(ProductsView));
+                }
+            }
         }
 
         private DelegateCommand<object> _editRecordCommand;
@@ -145,6 +161,7 @@ namespace ShopUI.Modules.Customers.ViewModels
         {
             _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);
             var itemList = (obj as ObservableCollection<object>).Cast<Product>().ToList();
+            
             foreach (var item in itemList)
             {
                 //var result = await _productRepository.Delete(item);
