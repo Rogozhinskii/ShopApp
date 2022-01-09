@@ -18,7 +18,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
     /// </summary>
     internal class AuthenticationDialogViewModel:DialogViewModel
     {        
-        private readonly IAuthenticationService _protector;
+        private readonly IAuthenticationService _autenticationService;
         private readonly IEventAggregator _eventAggregator;       
         
         /// <summary>
@@ -31,9 +31,9 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         private static int _maxLoginAttemptCount=2;
 
 
-        public AuthenticationDialogViewModel(IAuthenticationService protector,IEventAggregator eventAggregator,IDialogService dialogService)
-        {            
-            _protector = protector;
+        public AuthenticationDialogViewModel(IAuthenticationService autenticationService,IEventAggregator eventAggregator,IDialogService dialogService)
+        {
+            _autenticationService = autenticationService;
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
         }
@@ -87,7 +87,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
                     {
                         _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);
                         if (UserName is null || Password is null) { _currentLoginAttemptCount++; return; };
-                        isSignedIf = await _protector.LogIn(UserName, Password);
+                        isSignedIf = await _autenticationService.LogInAsync(UserName, Password);
                         _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
                         if (!isSignedIf)
                         {
@@ -128,7 +128,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
                     r.Parameters.TryGetValue(CommonTypesPrism.SecurePassword, out SecureString password);
                     if(userName != null && password != null)
                     {
-                        var registerResult = await _protector.Register(userName, password);
+                        var registerResult = await _autenticationService.RegisterAsync(userName, password);
                         if (registerResult)
                             ShowNotificationDialog(DialogType.NotificationDialog,"Пользователь зарегистрирован!");
                     }

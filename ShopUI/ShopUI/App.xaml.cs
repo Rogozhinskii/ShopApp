@@ -1,10 +1,12 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Services.Dialogs;
+using ShopLibrary;
+using ShopLibrary.Context;
+using ShopLibrary.Entityes;
+using ShopLibrary.Interfaces;
 using ShopUI.Core;
 using ShopUI.Modules.NotificationTools;
-using ShopUI.Modules.NotificationTools.ViewModels;
-using ShopUI.Modules.NotificationTools.Views;
 using ShopUI.Modules.Products;
 using ShopUI.Services;
 using ShopUI.Services.Interfaces;
@@ -53,12 +55,19 @@ namespace ShopUI
             if (containerRegistry != null)
             {   
                 try
-                {                    
-                    //_dialogService = Container.Resolve<IDialogService>() ?? throw new NullReferenceException(nameof(IDialogService));
-                    //var connectionStrings = ConfigurationManager.ConnectionStrings;
-                    //var repositoryManager = new RepositoryManager(connectionStrings);
-                    //containerRegistry.RegisterInstance<IRepositoryManager>(repositoryManager);
-                    //containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
+                {                   
+                    var connectionStrings = ConfigurationManager.ConnectionStrings;
+                    var context = new ShopAppDBContextFactory(connectionStrings[ConnectionStringNames.MSSQL]).CreateDbContext(null);
+                    containerRegistry.RegisterInstance(context)
+                                     .Register<IRepository<User>, DBRepository<User>>()
+                                     .Register<IRepository<Customer>, CustomersRepository>()
+                                     .Register<IRepository<Product>, ProductsRepository>()
+                                     ;
+
+                   
+                   
+                    
+                    containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
                 }
                 catch (Exception e)
                 {
@@ -82,7 +91,7 @@ namespace ShopUI
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             //moduleCatalog.AddModule<CustomersModule>();
-            //moduleCatalog.AddModule<NotificationToolsModule>();
+            moduleCatalog.AddModule<NotificationToolsModule>();
         }
     }
 }

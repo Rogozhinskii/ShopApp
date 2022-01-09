@@ -4,7 +4,7 @@ using ShopLibrary.Interfaces;
 
 namespace ShopLibrary
 {
-    internal class DBRepository<T> : IRepository<T> where T : class,IEntity, new()
+    public class DBRepository<T> : IRepository<T> where T : class,IEntity, new()
     {
         private readonly ShopAppDB _db;
         private readonly DbSet<T> _dbSet;

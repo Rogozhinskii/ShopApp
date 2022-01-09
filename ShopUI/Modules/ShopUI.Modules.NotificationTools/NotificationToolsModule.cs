@@ -19,8 +19,7 @@ namespace ShopUI.Modules.NotificationTools
         public void OnInitialized(IContainerProvider containerProvider)
         {
             _regionManager.RegisterViewWithRegion(RegionNames.StatusBarRegion,typeof(StatusBar));
-            containerProvider.Resolve<IAuthenticationService>();
-            containerProvider.Resolve<IRepositoryManager>();
+            containerProvider.Resolve<IAuthenticationService>();            
             
         }
 

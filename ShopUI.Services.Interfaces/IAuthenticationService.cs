@@ -11,11 +11,11 @@ namespace ShopUI.Services.Interfaces
         /// Производит регистрацию пользователей по введенным логину и пароль. Возвращает true если регистрация прошла успешно, 
         /// иначе false
         /// </summary>
-        public Task<bool> Register(string userName, SecureString password);
+        public Task<bool> RegisterAsync(string userName, SecureString password,CancellationToken token=default);
 
         /// <summary>
         /// Возвращает true если пользователей найден в базе и пароль введен верно, иначе false
         /// </summary>       
-        public Task<bool> LogIn(string userName, SecureString password);
+        public Task<bool> LogInAsync(string userName, SecureString password, CancellationToken token = default);
     }
 }

@@ -16,9 +16,9 @@ namespace ShopLibrary.Authentication
         {
             _usersRepository = usersRepository;
         }
-        public async Task<bool> Register(string userName,SecureString password)
+        public async Task<bool> RegisterAsync(string userName,SecureString password, CancellationToken token=default)
         {
-            var foundedUser = await _usersRepository.Items.FirstOrDefaultAsync(x=>x.Name==userName).ConfigureAwait(false);
+            var foundedUser = await _usersRepository.Items.FirstOrDefaultAsync(x=>x.Name==userName,token).ConfigureAwait(false);
             if (foundedUser!=null)
                 throw new Exception("Пользователь с таким именем зарегистрирован");
             var rnd=RandomNumberGenerator.Create();
@@ -38,9 +38,9 @@ namespace ShopLibrary.Authentication
             return false;
         }
 
-        public async Task<bool> LogIn(string userName,SecureString password)
+        public async Task<bool> LogInAsync(string userName,SecureString password, CancellationToken token=default)
         {
-            var user = await _usersRepository.Items.FirstOrDefaultAsync(x => x.Name == userName).ConfigureAwait(false);
+            var user = await _usersRepository.Items.FirstOrDefaultAsync(x => x.Name == userName,token).ConfigureAwait(false);
             var saltedhashedPassword = SaltAndHashPassword(password, user.Salt);
             return saltedhashedPassword == user.SaltedHashedPassword;
         }

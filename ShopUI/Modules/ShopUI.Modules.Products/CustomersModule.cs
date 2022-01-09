@@ -20,8 +20,7 @@ namespace ShopUI.Modules.Products
         public void OnInitialized(IContainerProvider containerProvider)
         {            
             if(containerProvider != null)
-            {
-                containerProvider.Resolve<IRepositoryManager>();
+            {                
                 _regionManager.RegisterViewWithRegion(RegionNames.ProductsRegion, typeof(ProductsView));
             }
         }

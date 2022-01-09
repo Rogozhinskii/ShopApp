@@ -1,14 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Configuration;
 
 namespace ShopLibrary.Context
 {
-    internal class ShopAppDBContextFactory : IDesignTimeDbContextFactory<ShopAppDB>
+    public class ShopAppDBContextFactory : IDesignTimeDbContextFactory<ShopAppDB>
     {
+        private readonly ConnectionStringSettings connectionStringSettings;
+
+        public ShopAppDBContextFactory(ConnectionStringSettings connectionStringSettings)
+        {
+            this.connectionStringSettings = connectionStringSettings??throw new ArgumentNullException(nameof(connectionStringSettings));
+        }
         public ShopAppDB CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ShopAppDB>();
-            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=ShopDb; Integrated Security =True");
+            switch (connectionStringSettings.Name)
+            {
+                case "MSSQL":
+                    optionsBuilder.UseSqlServer(connectionStringSettings.ConnectionString);
+                    break;
+                default: throw new InvalidOperationException("Не распознано имя строки подключения");
+            }            
             return new ShopAppDB(optionsBuilder.Options);
         }
     }

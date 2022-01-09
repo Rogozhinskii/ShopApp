@@ -1,5 +1,7 @@
 ﻿using ShopLibrary.Authentication;
 using ShopLibrary.Authentication.Interfaces;
+using ShopLibrary.Entityes;
+using ShopLibrary.Interfaces;
 using ShopUI.Services.Interfaces;
 using System.Security;
 
@@ -9,21 +11,18 @@ namespace ShopUI.Services
     {
         private readonly IProtector _protector;
 
-        public AuthenticationService(IRepositoryManager repositoryManager)
+        public AuthenticationService(IRepository<User> usersRepository)
         {
-            //_protector = new Protector(repositoryManager.GetRepository(RepositoryType.Users) as IRepository<User>);
+            _protector = new Protector(usersRepository);
+        }
+        public async Task<bool> LogInAsync(string userName, SecureString password,CancellationToken token = default) =>
+            await _protector.LogInAsync(userName, password,token);
+            
+        
 
-        }
-        public Task<bool> LogIn(string userName, SecureString password)
-        {
-            return Task.Run(() => {
-                return _protector.LogIn(userName, password);
-            });
-        }
-
-        public Task<bool> Register(string userName, SecureString password)
-        {
-            return Task.Run(() => _protector.Register(userName, password));
-        }
+        public async Task<bool> RegisterAsync(string userName, SecureString password,CancellationToken token = default) =>
+            await _protector.RegisterAsync(userName,password,token);
+            
+        
     }
 }

@@ -5,7 +5,7 @@
     /// </summary>
     public static class ConnectionStringNames
     {
-        public const string sqlConnection = "mssqlConnection";
+        public const string MSSQL = "MSSQL";
         public const string accessConnection = "msAccessConnection";
     }
 }
