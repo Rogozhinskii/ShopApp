@@ -1,6 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Services.Dialogs;
-using ShopLibrary.Models;
+using ShopLibrary.Entityes;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
 
@@ -58,7 +58,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             parameters.TryGetValue(CommonTypesPrism.EditableRecord,out _originalRecord);
             parameters.TryGetValue(CommonTypesPrism.EmailParam,out string email);
             if (_originalRecord != null){
-                Product = (Product)_originalRecord.Clone();
+                //Product = (Product)_originalRecord.Clone();
             }
             else{
                 if (email != null)

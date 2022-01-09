@@ -1,5 +1,6 @@
 ﻿using Prism.Events;
-using ShopLibrary.Models;
+using ShopLibrary.Entityes;
+
 
 namespace EventAggregator.Core
 {

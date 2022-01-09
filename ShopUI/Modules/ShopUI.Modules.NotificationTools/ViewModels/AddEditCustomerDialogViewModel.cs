@@ -1,6 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Services.Dialogs;
-using ShopLibrary.Models;
+using ShopLibrary.Entityes;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
 
@@ -59,7 +59,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
             parameters.TryGetValue(CommonTypesPrism.CustomerParam, out _originalCustomer);
             if (_originalCustomer != null)
             {
-                CurrentCustomer = (Customer)_originalCustomer.Clone();
+                //CurrentCustomer = (Customer)_originalCustomer.Clone();
             }
         }
 

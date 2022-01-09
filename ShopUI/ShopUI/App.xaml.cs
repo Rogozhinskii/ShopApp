@@ -25,7 +25,7 @@ namespace ShopUI
         private IDialogService _dialogService;
         protected override Window CreateShell()
         {
-            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            //DispatcherUnhandledException += App_DispatcherUnhandledException;
             return Container.Resolve<MainWindow>();
         }
 
@@ -36,11 +36,11 @@ namespace ShopUI
         /// <param name="e"></param>
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            DialogParameters dialogParameters = new()
-            {
-                { CommonTypesPrism.DialogMessage, e.Exception.Message }
-            };
-            _dialogService.ShowDialog(CommonTypesPrism.ErrorNotification, dialogParameters, result => { });
+            //DialogParameters dialogParameters = new()
+            //{
+            //    { CommonTypesPrism.DialogMessage, e.Exception.Message }
+            //};
+            //_dialogService.ShowDialog(CommonTypesPrism.ErrorNotification, dialogParameters, result => { });
             e.Handled = true;
         }
 
@@ -54,11 +54,11 @@ namespace ShopUI
             {   
                 try
                 {                    
-                    _dialogService = Container.Resolve<IDialogService>() ?? throw new NullReferenceException(nameof(IDialogService));
-                    var connectionStrings = ConfigurationManager.ConnectionStrings;
-                    var repositoryManager = new RepositoryManager(connectionStrings);
-                    containerRegistry.RegisterInstance<IRepositoryManager>(repositoryManager);
-                    containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
+                    //_dialogService = Container.Resolve<IDialogService>() ?? throw new NullReferenceException(nameof(IDialogService));
+                    //var connectionStrings = ConfigurationManager.ConnectionStrings;
+                    //var repositoryManager = new RepositoryManager(connectionStrings);
+                    //containerRegistry.RegisterInstance<IRepositoryManager>(repositoryManager);
+                    //containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
                 }
                 catch (Exception e)
                 {
@@ -81,8 +81,8 @@ namespace ShopUI
         /// <param name="moduleCatalog"></param>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            moduleCatalog.AddModule<CustomersModule>();
-            moduleCatalog.AddModule<NotificationToolsModule>();
+            //moduleCatalog.AddModule<CustomersModule>();
+            //moduleCatalog.AddModule<NotificationToolsModule>();
         }
     }
 }

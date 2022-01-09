@@ -1,7 +1,7 @@
-﻿using ShopLibrary.Authentication.Interfaces;
-using ShopLibrary.DAL.Extensions;
-using ShopLibrary.DAO.interfaces;
-using ShopLibrary.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopLibrary.Authentication.Interfaces;
+using ShopLibrary.Entityes;
+using ShopLibrary.Interfaces;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -18,8 +18,8 @@ namespace ShopLibrary.Authentication
         }
         public async Task<bool> Register(string userName,SecureString password)
         {
-            var foundedUser = (await _usersRepository.Select(x => x.Name == userName));
-            if (foundedUser.Any())
+            var foundedUser = await _usersRepository.Items.FirstOrDefaultAsync(x=>x.Name==userName).ConfigureAwait(false);
+            if (foundedUser!=null)
                 throw new Exception("Пользователь с таким именем зарегистрирован");
             var rnd=RandomNumberGenerator.Create();
             var saltBytes=new byte[16];
@@ -32,15 +32,15 @@ namespace ShopLibrary.Authentication
                 Salt = saltText,
                 SaltedHashedPassword = saltedhashedPassword,
             };
-            var insertResult=await _usersRepository.Insert(newUser);
-            if (insertResult != 0)
+            var insertResult=await _usersRepository.AddAsync(newUser);
+            if (insertResult != null)
                 return true;
             return false;
         }
 
         public async Task<bool> LogIn(string userName,SecureString password)
         {
-            var user = (await _usersRepository.Select(x => x.Name == userName)).First();
+            var user = await _usersRepository.Items.FirstOrDefaultAsync(x => x.Name == userName).ConfigureAwait(false);
             var saltedhashedPassword = SaltAndHashPassword(password, user.Salt);
             return saltedhashedPassword == user.SaltedHashedPassword;
         }

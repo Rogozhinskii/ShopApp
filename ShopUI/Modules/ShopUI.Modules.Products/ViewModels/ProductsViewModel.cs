@@ -2,9 +2,8 @@
 using Prism.Commands;
 using Prism.Events;
 using Prism.Services.Dialogs;
-using ShopLibrary.DAL.Extensions;
-using ShopLibrary.DAO.interfaces;
-using ShopLibrary.Models;
+using ShopLibrary.Entityes;
+using ShopLibrary.Interfaces;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
 using ShopUI.Services;
@@ -46,7 +45,7 @@ namespace ShopUI.Modules.Customers.ViewModels
             try
             {
                 Products.ToList().ForEach(p =>p.Email = obj.Email);
-                var updateResult = await _productRepository.UpdateMany(Products); //обновляем email
+                //var updateResult = await _productRepository.UpdateMany(Products); //обновляем email
                 sourseUpdateEvent.Invoke(this, new EventArgs());
             }
             catch (Exception ex){
@@ -66,11 +65,11 @@ namespace ShopUI.Modules.Customers.ViewModels
             var parameters = new DialogParameters();
             try
             {
-                var deleteResult = await _productRepository.Delete(x => x.Email == obj.Email);
-                if (deleteResult)
-                {
-                    ShowNotificationDialog(DialogType.NotificationDialog, "Записи удалены");
-                }
+                //var deleteResult = await _productRepository.Delete(x => x.Email == obj.Email);
+                //if (deleteResult)
+                //{
+                //    ShowNotificationDialog(DialogType.NotificationDialog, "Записи удалены");
+                //}
             }
             catch (Exception ex)
             {
@@ -88,8 +87,8 @@ namespace ShopUI.Modules.Customers.ViewModels
         {
             _productsOwner=obj;
             Products.Clear();
-            var uploadedProducts = await _productRepository.Select(x=>x.Email==_productsOwner.Email);
-            Products.AddRange(uploadedProducts);
+            //var uploadedProducts = await _productRepository.Select(x=>x.Email==_productsOwner.Email);
+            //Products.AddRange(uploadedProducts);
             sourseUpdateEvent.Invoke(this, new EventArgs());
         }
 
@@ -122,14 +121,14 @@ namespace ShopUI.Modules.Customers.ViewModels
                 {
                     var editableRecord = result.Parameters.GetValue<Product>(CommonTypesPrism.EditableRecord);
                     if (editableRecord is null || editableRecord.Equals(firstSelectedItem)) return;
-                    var updateResult = await _productRepository.Update(editableRecord);
-                    if (updateResult)
-                    {
-                        var index = Products.IndexOf(Products.Where(i => i.Id == editableRecord.Id).FirstOrDefault());
-                        Products.RemoveAt(index);
-                        Products.Insert(index, editableRecord);
-                        sourseUpdateEvent.Invoke(this, new EventArgs());
-                    }
+                    //var updateResult = await _productRepository.Update(editableRecord);
+                    //if (updateResult)
+                    //{
+                    //    var index = Products.IndexOf(Products.Where(i => i.Id == editableRecord.Id).FirstOrDefault());
+                    //    Products.RemoveAt(index);
+                    //    Products.Insert(index, editableRecord);
+                    //    sourseUpdateEvent.Invoke(this, new EventArgs());
+                    //}
                 });
 
 
@@ -149,8 +148,8 @@ namespace ShopUI.Modules.Customers.ViewModels
             var itemList = (obj as ObservableCollection<object>).Cast<Product>().ToList();
             foreach (var item in itemList)
             {
-                var result = await _productRepository.Delete(item);
-                if (result) Products.Remove(item);
+                //var result = await _productRepository.Delete(item);
+                //if (result) Products.Remove(item);
             }
             _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
         }
@@ -172,9 +171,9 @@ namespace ShopUI.Modules.Customers.ViewModels
             {
                 var newRecord = result.Parameters.GetValue<Product>(CommonTypesPrism.EditableRecord);
                 if (newRecord is null) return;
-                int newRecordId = await _productRepository.Insert(newRecord);
-                newRecord.Id= newRecordId;
-                if (newRecordId>0) Products.Add(newRecord);
+                //int newRecordId = await _productRepository.Insert(newRecord);
+                //newRecord.Id= newRecordId;
+                //if (newRecordId>0) Products.Add(newRecord);
                 sourseUpdateEvent.Invoke(this, new EventArgs());
             });
 

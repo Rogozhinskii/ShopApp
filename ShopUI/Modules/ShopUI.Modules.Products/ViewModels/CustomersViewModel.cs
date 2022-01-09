@@ -3,8 +3,8 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using ShopLibrary.DAO.interfaces;
-using ShopLibrary.Models;
+using ShopLibrary.Entityes;
+using ShopLibrary.Interfaces;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
 using ShopUI.Services;
@@ -31,6 +31,8 @@ namespace ShopUI.Modules.Products.ViewModels
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
         }
+
+        
 
         private ObservableCollection<Customer> _customers;
         /// <summary>
@@ -67,12 +69,13 @@ namespace ShopUI.Modules.Products.ViewModels
              {
                  var editableCustomer = result.Parameters.GetValue<Customer>(CommonTypesPrism.CustomerParam);
                  if (editableCustomer is null || editableCustomer.Equals(SelectedCustomer)) return;
-                 var updateResult = await _customersRepository.Update(editableCustomer);
-                 if (updateResult)
-                 {
-                     _eventAggregator.GetEvent<OnCustomerEdited>().Publish(editableCustomer);
-                     await UpdateData();
-                 }
+                 await _customersRepository.UpdateAsync(editableCustomer);
+                 //var updateResult = await _customersRepository.UpdateAsync(editableCustomer);
+                 //if (updateResult)
+                 //{
+                 //    _eventAggregator.GetEvent<OnCustomerEdited>().Publish(editableCustomer);
+                 //    await UpdateData();
+                 //}
              });
         }
 
@@ -85,12 +88,13 @@ namespace ShopUI.Modules.Products.ViewModels
         async Task ExecuteDeleteCustomerCommandAsync()
         {
             if(SelectedCustomer != null){
-                var deleteResult=await _customersRepository.Delete(SelectedCustomer);
-                if (deleteResult)
-                {
-                    _eventAggregator.GetEvent<OnCustomerDeleted>().Publish(SelectedCustomer);
-                    Customers.Remove(SelectedCustomer);
-                }
+               await _customersRepository.RemoveAsync(SelectedCustomer);
+                //var deleteResult=await _customersRepository.RemoveAsync(SelectedCustomer);
+                //if (deleteResult)
+                //{
+                //    _eventAggregator.GetEvent<OnCustomerDeleted>().Publish(SelectedCustomer);
+                //    Customers.Remove(SelectedCustomer);
+                //}
                     
             }
         }
@@ -111,11 +115,11 @@ namespace ShopUI.Modules.Products.ViewModels
                 {
                     var editableCustomer = result.Parameters.GetValue<Customer>(CommonTypesPrism.CustomerParam);
                     if (editableCustomer is null) return;
-                    var newCustomerId = await _customersRepository.Insert(editableCustomer);
-                    if (newCustomerId > 0)
-                    {
-                        await UpdateData();
-                    }
+                    //var newCustomerId = await _customersRepository.AddAsync(editableCustomer);
+                    //if (newCustomerId > 0)
+                    //{
+                    //    await UpdateData();
+                    //}
                 });
             }
             catch (Exception ex){
@@ -129,7 +133,7 @@ namespace ShopUI.Modules.Products.ViewModels
         /// </summary>
         /// <returns></returns>
         private async Task UpdateData(){
-            Customers = new(await _customersRepository.Select());            
+            /*Customers = new(await _customersRepository.Items)*/;            
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)

@@ -1,7 +1,5 @@
 ﻿using ShopLibrary.Authentication;
 using ShopLibrary.Authentication.Interfaces;
-using ShopLibrary.DAO.interfaces;
-using ShopLibrary.Models;
 using ShopUI.Services.Interfaces;
 using System.Security;
 
@@ -13,7 +11,7 @@ namespace ShopUI.Services
 
         public AuthenticationService(IRepositoryManager repositoryManager)
         {
-            _protector = new Protector(repositoryManager.GetRepository(RepositoryType.Users) as IRepository<User>);
+            //_protector = new Protector(repositoryManager.GetRepository(RepositoryType.Users) as IRepository<User>);
 
         }
         public Task<bool> LogIn(string userName, SecureString password)
