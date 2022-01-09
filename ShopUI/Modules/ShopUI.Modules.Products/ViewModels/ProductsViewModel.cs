@@ -17,23 +17,22 @@ using System.Windows;
 namespace ShopUI.Modules.Customers.ViewModels
 {
     public class ProductsViewModel: ViewModelBase
-    {
-        private readonly IRepositoryManager _repositoryManager;       
+    {       
+        
         private readonly IEventAggregator _eventAggregator;
-        private IRepository<Product> _productRepository;
+        private readonly IRepository<Product> _productRepository;
 
         /// <summary>
         /// событие для обновления данных в гриде
         /// </summary>
         public event EventHandler sourseUpdateEvent;
         private Customer _productsOwner;
-        public ProductsViewModel(IRepositoryManager repositoryManager, IDialogService dialogService,IEventAggregator eventAggregator)
-        {
-            _repositoryManager = repositoryManager;
-            _dialogService = dialogService;
+        public ProductsViewModel(IRepository<Product> productsRepository, IDialogService dialogService,IEventAggregator eventAggregator)
+        {            
+            _dialogService = dialogService;           
             _eventAggregator = eventAggregator;
-            _productRepository = _repositoryManager.GetRepository(RepositoryType.Products) as IRepository<Product>;
-            Products = new ObservableCollection<Product>();
+            _productRepository = productsRepository;
+             Products = new ObservableCollection<Product>(); //todo переделать
             _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Subscribe(async (obj) =>await OnSelectedCustomerChangedAsync(obj));
             _eventAggregator.GetEvent<OnCustomerDeleted>().Subscribe(async (obj) => await OnCustomerDeleted(obj));
             _eventAggregator.GetEvent<OnCustomerEdited>().Subscribe(async (obj) => await OnCustomerEdited(obj));

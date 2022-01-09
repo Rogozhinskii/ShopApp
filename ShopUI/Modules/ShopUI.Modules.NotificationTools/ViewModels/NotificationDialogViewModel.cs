@@ -9,6 +9,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
     /// </summary>
     public class NotificationDialogViewModel: ErrorNotificationViewModel
     {
+        
         public override void OnDialogOpened(IDialogParameters parameters)
         {
             Message = parameters.GetValue<string>(CommonTypesPrism.DialogMessage);

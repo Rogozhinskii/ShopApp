@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ShopLibrary.Models.Data
+namespace ShopLibrary.Models
 {
     /// <summary>
     /// Хранит коллекции имен и фамилий
@@ -230,24 +230,27 @@ namespace ShopLibrary.Models.Data
         /// Возвращает случайное имя сотрудника
         /// </summary>
         /// <returns></returns>
-        public static string GetRandomName()=> 
-            names[rnd.Next(names.Length - 1)];
+        public static string GetRandomName() =>
+            rnd.NextItem<string>(names);
+            
         
 
         /// <summary>
         /// Возвращает случайную фамилию сотрудника
         /// </summary>
         /// <returns></returns>
-        public static string GetRandomSurname() => 
-            surnames[rnd.Next(surnames.Length - 1)];
+        public static string GetRandomSurname() =>
+            rnd.NextItem<string>(surnames);
+        
         
 
         /// <summary>
         /// Возвращает случайную фамилию сотрудника
         /// </summary>
         /// <returns></returns>
-        public static string GetRandomPatronymic()=> 
-            patronymics[rnd.Next(patronymics.Length - 1)];
+        public static string GetRandomPatronymic()=>
+            rnd.NextItem<string>(patronymics);
+        
         
         public static string GetRandomPhoneNumber()
         {

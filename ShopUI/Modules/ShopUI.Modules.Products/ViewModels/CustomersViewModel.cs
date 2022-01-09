@@ -1,4 +1,5 @@
 ﻿using EventAggregator.Core;
+using Microsoft.EntityFrameworkCore;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -7,12 +8,12 @@ using ShopLibrary.Entityes;
 using ShopLibrary.Interfaces;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
-using ShopUI.Services;
-using ShopUI.Services.Interfaces;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace ShopUI.Modules.Products.ViewModels
 {
@@ -20,19 +21,44 @@ namespace ShopUI.Modules.Products.ViewModels
     /// ViewModel для работы с покупателями
     /// </summary>
     public class CustomersViewModel : ViewModelBase
-    {
-        private readonly IRepositoryManager _repositoryManager;
+    {        
         private readonly IEventAggregator _eventAggregator;       
         private IRepository<Customer> _customersRepository;
 
-        public CustomersViewModel(IRepositoryManager repositoryManager, IEventAggregator eventAggregator,IDialogService dialogService)
+        public CustomersViewModel(IRepository<Customer> customersRepository,IEventAggregator eventAggregator,IDialogService dialogService)
         {
-            _repositoryManager = repositoryManager;
+            _customersRepository = customersRepository;
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
+            _customersViewSource = new CollectionViewSource()
+            {
+                SortDescriptions =
+                {
+                    new SortDescription(nameof(Customer.Surname), ListSortDirection.Ascending)
+                }
+            };
+            _customersViewSource.Filter += OnCustomerFiltered;
         }
 
-        
+
+        /// <summary>
+        /// Обрабатывает фильтрацию коллекцию покупателей
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnCustomerFiltered(object sender, FilterEventArgs e)
+        {
+            if (!(e.Item is Customer customer) || string.IsNullOrEmpty(FilterText)) return;
+            if (customer.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase)) return;
+            if (customer.Surname.Contains(FilterText, StringComparison.OrdinalIgnoreCase)) return;
+            e.Accepted = false;
+        }
+
+        public ICollectionView CostomersView => _customersViewSource?.View;
+        public CollectionViewSource _customersViewSource;
+
+        #region ObservableCollection<Customers>: коллекция покупателей
 
         private ObservableCollection<Customer> _customers;
         /// <summary>
@@ -41,19 +67,35 @@ namespace ShopUI.Modules.Products.ViewModels
         public ObservableCollection<Customer> Customers
         {
             get { return _customers; }
-            set { SetProperty(ref _customers, value); }
+            set
+            {
+                if (SetProperty(ref _customers, value))
+                {
+                    _customersViewSource.Source = value;                    
+                    RaisePropertyChanged(nameof(CostomersView));
+                }
+            }
         }
 
+        #endregion
+
+        #region SelectedCustomer-выбранный покупатель
         private Customer _selectedCustomer;
         public Customer SelectedCustomer
         {
             get { return _selectedCustomer; }
-            set { SetProperty(ref _selectedCustomer, value); 
-                if(SelectedCustomer is not null)
+            set
+            {
+                if (SetProperty(ref _selectedCustomer, value))
+                {
                     _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Publish(SelectedCustomer);
+                    _deleteCustomerCommand.RaiseCanExecuteChanged();
+                }
             }
         }
+        #endregion
 
+        #region DelegateCommand EditCustomerCommand -вызов диалогового окна редактирования и сохранение изменений
         private DelegateCommand _editCustomerCommand;
         /// <summary>
         /// Вызывает окна редактирования покупателя
@@ -62,43 +104,46 @@ namespace ShopUI.Modules.Products.ViewModels
            _editCustomerCommand ??= _editCustomerCommand = new(ExecuteEditCustomerCommand);
         private void ExecuteEditCustomerCommand()
         {
-            if(SelectedCustomer == null) return;
+            if (SelectedCustomer == null) return;
             DialogParameters parameters = new();
             parameters.Add(CommonTypesPrism.CustomerParam, SelectedCustomer);
             _dialogService.ShowDialog(CommonTypesPrism.AddEditCustomerDialog, parameters, async result =>
-             {
-                 var editableCustomer = result.Parameters.GetValue<Customer>(CommonTypesPrism.CustomerParam);
-                 if (editableCustomer is null || editableCustomer.Equals(SelectedCustomer)) return;
-                 await _customersRepository.UpdateAsync(editableCustomer);
-                 //var updateResult = await _customersRepository.UpdateAsync(editableCustomer);
-                 //if (updateResult)
-                 //{
-                 //    _eventAggregator.GetEvent<OnCustomerEdited>().Publish(editableCustomer);
-                 //    await UpdateData();
-                 //}
-             });
+            {
+                if (result.Result != ButtonResult.OK) return;
+                await _customersRepository.UpdateAsync(SelectedCustomer);
+            });
         }
+        #endregion
 
-        private DelegateCommand _deleteCustomerCommand;
+        #region DelegateCommand<Customer> DeleteCustomerCommand команда удаления выбранного покупателя
+        private DelegateCommand<Customer> _deleteCustomerCommand;
         /// <summary>
-        /// выполняет удаление покупателя
+        /// Удаляет выбранного покупателя
         /// </summary>
-        public DelegateCommand DeleteCustomerCommand =>
-           _deleteCustomerCommand ??= _deleteCustomerCommand = new(async()=> await ExecuteDeleteCustomerCommandAsync());
-        async Task ExecuteDeleteCustomerCommandAsync()
-        {
-            if(SelectedCustomer != null){
-               await _customersRepository.RemoveAsync(SelectedCustomer);
-                //var deleteResult=await _customersRepository.RemoveAsync(SelectedCustomer);
-                //if (deleteResult)
-                //{
-                //    _eventAggregator.GetEvent<OnCustomerDeleted>().Publish(SelectedCustomer);
-                //    Customers.Remove(SelectedCustomer);
-                //}
-                    
-            }
-        }
+        public DelegateCommand<Customer> DeleteCustomerCommand =>
+           _deleteCustomerCommand ??= _deleteCustomerCommand = new DelegateCommand<Customer>(ExecuteDeleteCustomerCommand, CanExecuteDeleteCustomerCommand);
 
+        private bool CanExecuteDeleteCustomerCommand(Customer arg) => arg is not null || SelectedCustomer is not null;
+
+        private void ExecuteDeleteCustomerCommand(Customer obj)
+        {
+            var customerForDelete = obj ?? SelectedCustomer;
+            var msg = $"Вы уверены, что хотите удалить покупателя: {customerForDelete.Surname} {customerForDelete.Name} {customerForDelete.Patronymic}?";
+            var parameters = new DialogParameters();
+            parameters.Add(CommonTypesPrism.DialogMessage, msg);
+            _dialogService.Show(CommonTypesPrism.NotificationDialog, parameters, async r =>
+            {
+                if (r.Result != ButtonResult.OK) return;
+                await _customersRepository.RemoveAsync(customerForDelete);
+                Customers.Remove(customerForDelete);
+                if (ReferenceEquals(customerForDelete, SelectedCustomer))
+                    SelectedCustomer = null;
+            });
+
+        }
+        #endregion
+
+        #region DelegateCommand AddNewCustomerCommand -команда создания нового покупателя
         private DelegateCommand _addNewCustomerCommand;
         /// <summary>
         /// добавляет нового покупателя
@@ -110,40 +155,46 @@ namespace ShopUI.Modules.Products.ViewModels
             DialogParameters parameters = new();
             try
             {
-                parameters.Add(CommonTypesPrism.CustomerParam, new Customer());
+                var newCustomer = new Customer();
+                parameters.Add(CommonTypesPrism.CustomerParam, newCustomer);
                 _dialogService.ShowDialog(CommonTypesPrism.AddEditCustomerDialog, parameters, async result =>
                 {
-                    var editableCustomer = result.Parameters.GetValue<Customer>(CommonTypesPrism.CustomerParam);
-                    if (editableCustomer is null) return;
-                    //var newCustomerId = await _customersRepository.AddAsync(editableCustomer);
-                    //if (newCustomerId > 0)
-                    //{
-                    //    await UpdateData();
-                    //}
+                    if (result.Result == ButtonResult.Cancel || result.Result == ButtonResult.None) return;
+                    Customers.Add(await _customersRepository.AddAsync(newCustomer));
+                    SelectedCustomer = newCustomer;
                 });
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);
             }
-            
+
         }
+        #endregion
+
+        #region FilterText - поле для фильтрации
+        private string _filterText;
+        public string FilterText
+        {
+            get { return _filterText; }
+            set { SetProperty(ref _filterText, value); _customersViewSource.View.Refresh(); }
+        }
+
+        #endregion
 
         /// <summary>
         /// Обновляет коллекию покупателей
         /// </summary>
         /// <returns></returns>
         private async Task UpdateData(){
-            /*Customers = new(await _customersRepository.Items)*/;            
+            Customers = (await _customersRepository.Items.ToArrayAsync()).ToObservableCollection();                     
         }
 
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+        public async override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            Task.Run(async() =>{
-                _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);
-                _customersRepository = _repositoryManager.GetRepository(RepositoryType.Customers) as IRepository<Customer>;
-                await UpdateData();               
-                _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
-            });
+            _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);
+            await UpdateData();
+            _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);            
         }
     }
 }

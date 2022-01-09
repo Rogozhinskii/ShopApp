@@ -1,4 +1,6 @@
-﻿namespace ShopUI.Core.interfaces
+﻿using Prism.Services.Dialogs;
+
+namespace ShopUI.Core.interfaces
 {
     public interface NotificationDialog
     {

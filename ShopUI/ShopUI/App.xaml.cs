@@ -5,6 +5,7 @@ using ShopLibrary;
 using ShopLibrary.Context;
 using ShopLibrary.Entityes;
 using ShopLibrary.Interfaces;
+using ShopLibrary.Models;
 using ShopUI.Core;
 using ShopUI.Modules.NotificationTools;
 using ShopUI.Modules.Products;
@@ -14,6 +15,8 @@ using ShopUI.Views;
 using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -64,8 +67,6 @@ namespace ShopUI
                                      .Register<IRepository<Product>, ProductsRepository>()
                                      ;
 
-                   
-                   
                     
                     containerRegistry.RegisterSingleton<IAuthenticationService, AuthenticationService>();
                 }
@@ -90,8 +91,9 @@ namespace ShopUI
         /// <param name="moduleCatalog"></param>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            //moduleCatalog.AddModule<CustomersModule>();
+            moduleCatalog.AddModule<CustomersModule>();
             moduleCatalog.AddModule<NotificationToolsModule>();
         }
+
     }
 }

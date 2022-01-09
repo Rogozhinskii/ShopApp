@@ -11,10 +11,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
     /// </summary>
     public class AddEditCustomerDialogViewModel:DialogViewModel
     {
-        /// <summary>
-        /// исходный экземпляр покупателя
-        /// </summary>
-        private Customer _originalCustomer;
+       
         private Customer _currentCustomer;
 
         /// <summary>
@@ -34,8 +31,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
            _saveChangesCommand ??= _saveChangesCommand = new(ExecuteSaveChangesCommand);
         void ExecuteSaveChangesCommand()
         {
-            DialogResult dialogResult = new();
-            dialogResult.Parameters.Add(CommonTypesPrism.CustomerParam,CurrentCustomer);
+            DialogResult dialogResult = new(ButtonResult.OK);            
             RaiseRequestClose(dialogResult);
         }
 
@@ -48,19 +44,14 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
            _cancelCommand ??= _cancelCommand = new(ExecuteCancelCommand);
         void ExecuteCancelCommand()
         {
-            var result = new DialogResult();
-            result.Parameters.Add(CommonTypesPrism.CustomerParam, _originalCustomer);
+            var result = new DialogResult(ButtonResult.Cancel);
             RaiseRequestClose(result);
            
         }
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {
-            parameters.TryGetValue(CommonTypesPrism.CustomerParam, out _originalCustomer);
-            if (_originalCustomer != null)
-            {
-                //CurrentCustomer = (Customer)_originalCustomer.Clone();
-            }
+            CurrentCustomer=parameters.GetValue<Customer>(CommonTypesPrism.CustomerParam);            
         }
 
 
