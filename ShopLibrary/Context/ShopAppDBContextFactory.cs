@@ -1,17 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace ShopLibrary.Context
 {
     public class ShopAppDBContextFactory : IDesignTimeDbContextFactory<ShopAppDB>
     {
-        private readonly ConnectionStringSettings connectionStringSettings;
-
-        public ShopAppDBContextFactory(ConnectionStringSettings connectionStringSettings)
-        {
-            this.connectionStringSettings = connectionStringSettings??throw new ArgumentNullException(nameof(connectionStringSettings));
-        }
+        
+        public ShopAppDBContextFactory() {}
 
         /// <summary>
         /// Возвращает контекст подключения к источнику данных
@@ -22,13 +19,19 @@ namespace ShopLibrary.Context
         public ShopAppDB CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ShopAppDB>();
-            switch (connectionStringSettings.Name)
+            ConfigurationBuilder builder = new();
+            builder.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+            builder.AddJsonFile("appsettings.json");
+            IConfigurationRoot config = builder.Build();
+            var type = config["Type"];
+            switch (type)
             {
                 case "MSSQL":
-                    optionsBuilder.UseSqlServer(connectionStringSettings.ConnectionString);
+                    optionsBuilder.UseSqlServer(config.GetConnectionString(type));
                     break;
-                default: throw new InvalidOperationException("Не распознано имя строки подключения");
-            }            
+                default:
+                    throw new InvalidOperationException("Invalid DB Type");
+            }
             return new ShopAppDB(optionsBuilder.Options);
         }
     }

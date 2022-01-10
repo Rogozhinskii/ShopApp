@@ -12,7 +12,6 @@ using ShopUI.Services;
 using ShopUI.Services.Interfaces;
 using ShopUI.Views;
 using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
@@ -55,9 +54,8 @@ namespace ShopUI
             if (containerRegistry != null)
             {   
                 try
-                {                   
-                    var connectionStrings = ConfigurationManager.ConnectionStrings;
-                    var context = new ShopAppDBContextFactory(connectionStrings[ConnectionStringNames.MSSQL]).CreateDbContext(null);
+                {
+                    var context = new ShopAppDBContextFactory().CreateDbContext(null);
                     containerRegistry.RegisterInstance(context)
                                      .Register<IRepository<User>, DBRepository<User>>()
                                      .Register<IRepository<Customer>, CustomersRepository>()
