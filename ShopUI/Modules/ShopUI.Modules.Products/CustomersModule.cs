@@ -4,7 +4,7 @@ using Prism.Regions;
 using ShopUI.Core;
 using ShopUI.Modules.Customers.Views;
 using ShopUI.Modules.Products.Views;
-using ShopUI.Services.Interfaces;
+
 
 namespace ShopUI.Modules.Products
 {

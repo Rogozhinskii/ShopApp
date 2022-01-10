@@ -11,19 +11,12 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
     /// </summary>
     internal class AddEditProductDialogViewModel:DialogViewModel
     {
-        /// <summary>
-        /// исходный экземпляр продукта
-        /// </summary>
-        private Product _originalRecord;
-        private Product _product;
-        /// <summary>
-        /// Редактируемый объект продукта
-        /// </summary>
-        public Product Product
-        {
-            get { return _product; }
-            set { SetProperty(ref _product, value); }
-        }       
+        
+        private Product _originalProduct;
+
+        public string Email { get=>GetValue(_originalProduct?.Email); set=>SetValue(value); }
+        public string Description { get=>GetValue(_originalProduct?.Description); set=>SetValue(value); }
+        public int? ProductCode { get=> GetValue(_originalProduct?.ProductCode); set=>SetValue(value); }
 
         private DelegateCommand _saveChangesCommand;
         /// <summary>
@@ -34,8 +27,8 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
 
         void ExecuteSaveChangesCommand()
         {
-            DialogResult result=new DialogResult();
-            result.Parameters.Add(CommonTypesPrism.EditableRecord, Product);
+            SaveChanges(_originalProduct);
+            DialogResult result=new DialogResult(ButtonResult.OK);           
             RaiseRequestClose(result);
         }
 
@@ -48,30 +41,25 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
 
         void ExecuteCancelCommand()
         {
-            var result=new DialogResult();
-            result.Parameters.Add(CommonTypesPrism.EditableRecord, _originalRecord);
+            CancelChanges();
+            var result=new DialogResult(ButtonResult.Cancel);
             RaiseRequestClose(result);
         }
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {
-            parameters.TryGetValue(CommonTypesPrism.EditableRecord,out _originalRecord);
-            parameters.TryGetValue(CommonTypesPrism.EmailParam,out string email);
-            if (_originalRecord != null){
-                //Product = (Product)_originalRecord.Clone();
+            _originalProduct = parameters.GetValue<Product>(CommonTypesPrism.EditableRecord);
+            var type = this.GetType();
+            var props = type.GetProperties();
+            foreach (var item in props)
+            {
+                RaisePropertyChanged(item.Name);
             }
-            else{
-                if (email != null)
-                    Product = new Product { Email = email };
-                else
-                    Product = new Product();
-            }
-
         }
 
         public override void OnDialogClosed()
         {
-            Product = null;           
+            _originalProduct = null;           
         }
 
 

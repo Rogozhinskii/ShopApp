@@ -11,15 +11,15 @@
         </Grid.RowDefinitions>
         <UniformGrid Columns="2" Grid.Row="0">
             <TextBlock Text="Фамилия" Margin="5,0,5,0"/>
-            <TextBox Text="{Binding CurrentCustomer.Surname,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Surname,Mode=TwoWay}"/>
             <TextBlock Text="Имя" Margin="5,0,5,0"/>
-            <TextBox Text="{Binding CurrentCustomer.Name,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Name,Mode=TwoWay}"/>
             <TextBlock Text="Отчество" Margin="5,0,5,0"/>
-            <TextBox Text="{Binding CurrentCustomer.Patronymic,Mode=TwoWay}" Cursor="IBeam"/>
+            <TextBox Text="{Binding Patronymic,Mode=TwoWay}" Cursor="IBeam"/>
             <TextBlock Text="Номер телефона" Margin="5,0,5,0"/>
-            <TextBox Text="{Binding CurrentCustomer.PhoneNumber,Mode=TwoWay}" Cursor="IBeam"/>
+            <TextBox Text="{Binding PhoneNumber,Mode=TwoWay}" Cursor="IBeam"/>
             <TextBlock Text="Email" Margin="5,0,5,0"/>
-            <TextBox Text="{Binding CurrentCustomer.Email,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Email,Mode=TwoWay}"/>
         </UniformGrid>
         <UniformGrid Columns="2" Grid.Row="1">
             <Button Command="{Binding SaveChangesCommand}" 

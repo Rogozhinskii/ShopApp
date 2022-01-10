@@ -4,16 +4,23 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
-        <ListView ItemsSource="{Binding Repositories}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding ConnectionString}"
-                                    Header="Connection String" />
-                    <GridViewColumn DisplayMemberBinding="{Binding ConnectionState}"
-                                    Header="Connection State" />
-                </GridView>
-            </ListView.View>            
-        </ListView>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <UniformGrid Columns="2" Grid.Row="0">
+            <TextBlock Text="ConnectionString" Margin="5,0,5,0"/>
+            <TextBlock Text="{Binding ConnectionString,Mode=OneWay}" TextWrapping="Wrap"/>
+            <TextBlock Text="ConnectionState" Margin="5,0,5,0"/>
+            <TextBlock Text="{Binding ConnectionState,Mode=OneWay}"/>
+        </UniformGrid>
+
+        <Button Command="{Binding CloseCommand}" 
+                Content="Ok" 
+                FontSize="10"
+                IsEnabled="True"
+                Margin="10" Cursor="Hand"
+                Grid.Row="1"/>
+        
     </Grid>
 </UserControl>

@@ -8,7 +8,7 @@ namespace ShopLibrary
     {
         private readonly ShopAppDB _db;
         private readonly DbSet<T> _dbSet;
-
+        
         public bool AutoSaveChanges { get; set; } = true;
 
         public DBRepository(ShopAppDB context)
@@ -83,5 +83,11 @@ namespace ShopLibrary
                 await _db.SaveChangesAsync(token).ConfigureAwait(false);            
         }
 
+        public void SaveChanges()=>
+            _db.SaveChanges();
+
+        public async Task SaveChangesAsync(CancellationToken token = default)=>
+            await _db.SaveChangesAsync(token);
+        
     }
 }

@@ -11,11 +11,11 @@
         </Grid.RowDefinitions>
         <UniformGrid Columns="2" Grid.Row="0">
             <TextBlock Text="Email покупателя" Margin="5,0,5,0"/>
-            <TextBox Text="{Binding Product.Email,Mode=TwoWay}"/>
+            <TextBlock Text="{Binding Email}" TextWrapping="WrapWithOverflow"/>
             <TextBlock Text="Код продукта" Margin="5,0,5,0"/>
-            <TextBox Text="{Binding Product.ProductCode,Mode=TwoWay}"/>
+            <TextBox Text="{Binding ProductCode,Mode=TwoWay}"/>
             <TextBlock Text="Описание" Margin="5,0,5,0"/>
-            <TextBox Text="{Binding Product.Description,Mode=TwoWay}"/>
+            <TextBox Text="{Binding Description,Mode=TwoWay}"/>
         </UniformGrid>
         <UniformGrid Columns="2" Grid.Row="1">
             <Button Command="{Binding SaveChangesCommand}" 

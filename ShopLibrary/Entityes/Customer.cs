@@ -21,8 +21,15 @@ namespace ShopLibrary.Entityes
         /// </summary>
         public string Email { get; set; }
 
+        /// <summary>
+        /// Коллекция продуктов покупателя
+        /// </summary>
         public virtual ICollection<Product> Products { get; set; }
 
+        public Customer()
+        {
+            Products=new List<Product>();
+        }
         public override string ToString() =>
            $"<{Id}><{Surname}><{Name}><{Patronymic}><{PhoneNumber}><{Email}>";
     }

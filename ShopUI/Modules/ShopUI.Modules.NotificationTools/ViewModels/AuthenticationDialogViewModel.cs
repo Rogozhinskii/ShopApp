@@ -74,7 +74,8 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         /// реализует вход в приложение
         /// </summary>
         public DelegateCommand LogInCommand =>
-           _logInCommand ??= _logInCommand = new(async()=>await ExecuteLogInCommand());
+           _logInCommand ??= _logInCommand = new(async () => await ExecuteLogInCommand());
+           
 
         async Task ExecuteLogInCommand()
         {            
@@ -85,7 +86,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
                 {
                     try
                     {
-                        _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);
+                        _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);                        
                         if (UserName is null || Password is null) { _currentLoginAttemptCount++; return; };
                         isSignedIf = await _autenticationService.LogInAsync(UserName, Password);
                         _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
@@ -100,10 +101,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        var parameters = new DialogParameters();
-                        parameters.Add(CommonTypesPrism.DialogMessage,ex.Message);
-                        _dialogService.Show(CommonTypesPrism.ErrorNotification, parameters,null);
-                        throw;
+                        ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);                        
                     }
                                   
                 }

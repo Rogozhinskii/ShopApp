@@ -85,7 +85,7 @@ namespace ShopUI.Modules.Products.ViewModels
         {
             get { return _selectedCustomer; }
             set
-            {
+            {                
                 if (SetProperty(ref _selectedCustomer, value))
                 {
                     _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Publish(SelectedCustomer);
@@ -105,13 +105,18 @@ namespace ShopUI.Modules.Products.ViewModels
         private void ExecuteEditCustomerCommand()
         {
             if (SelectedCustomer == null) return;
-            DialogParameters parameters = new();
+            DialogParameters parameters = new();           
             parameters.Add(CommonTypesPrism.CustomerParam, SelectedCustomer);
             _dialogService.ShowDialog(CommonTypesPrism.AddEditCustomerDialog, parameters, async result =>
             {
-                if (result.Result != ButtonResult.OK) return;
+                if (result.Result != ButtonResult.OK) return;                           
                 await _customersRepository.UpdateAsync(SelectedCustomer);
+                _customersViewSource.View.Refresh();
+                _eventAggregator.GetEvent<OnCustomerEdited>().Publish();
+
             });
+            
+
         }
         #endregion
 
@@ -174,6 +179,9 @@ namespace ShopUI.Modules.Products.ViewModels
 
         #region FilterText - поле для фильтрации
         private string _filterText;
+        /// <summary>
+        /// Поле для фильтрации
+        /// </summary>
         public string FilterText
         {
             get { return _filterText; }

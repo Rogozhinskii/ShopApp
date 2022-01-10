@@ -5,7 +5,6 @@ using ShopLibrary;
 using ShopLibrary.Context;
 using ShopLibrary.Entityes;
 using ShopLibrary.Interfaces;
-using ShopLibrary.Models;
 using ShopUI.Core;
 using ShopUI.Modules.NotificationTools;
 using ShopUI.Modules.Products;
@@ -15,8 +14,6 @@ using ShopUI.Views;
 using System;
 using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -30,7 +27,7 @@ namespace ShopUI
         private IDialogService _dialogService;
         protected override Window CreateShell()
         {
-            //DispatcherUnhandledException += App_DispatcherUnhandledException;
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
             return Container.Resolve<MainWindow>();
         }
 
@@ -41,11 +38,11 @@ namespace ShopUI
         /// <param name="e"></param>
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            //DialogParameters dialogParameters = new()
-            //{
-            //    { CommonTypesPrism.DialogMessage, e.Exception.Message }
-            //};
-            //_dialogService.ShowDialog(CommonTypesPrism.ErrorNotification, dialogParameters, result => { });
+            DialogParameters dialogParameters = new()
+            {
+                { CommonTypesPrism.DialogMessage, e.Exception.Message }
+            };
+            _dialogService.ShowDialog(CommonTypesPrism.ErrorNotification, dialogParameters, result => { });
             e.Handled = true;
         }
 
@@ -72,7 +69,7 @@ namespace ShopUI
                 }
                 catch (Exception e)
                 {
-                    var result = MessageBox.Show(e.Message, "Fatal Error", MessageBoxButton.OK);
+                    var result = MessageBox.Show(e.Message, "Fatal Error",MessageBoxButton.OK,MessageBoxImage.Error);
                     if(result == MessageBoxResult.OK)
                     {
                         Process.GetCurrentProcess().Kill();

@@ -33,9 +33,9 @@
                                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                                                 EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"/>
 
-                    <DataGridTextColumn Header="Email покупателя" Binding="{Binding Email,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
-                    <DataGridTextColumn Header="Email покупателя" Binding="{Binding ProductCode,UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn Header="Email покупателя" Binding="{Binding Description,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <DataGridTextColumn Header="Email покупателя" Binding="{Binding Email,UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Код продукта" Binding="{Binding ProductCode,UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Описание продукта" Binding="{Binding Description,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

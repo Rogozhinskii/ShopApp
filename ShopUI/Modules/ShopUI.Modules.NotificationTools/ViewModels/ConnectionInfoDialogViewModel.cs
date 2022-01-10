@@ -1,7 +1,9 @@
-﻿using Prism.Services.Dialogs;
+﻿using Microsoft.EntityFrameworkCore;
+using Prism.Commands;
+using Prism.Services.Dialogs;
+using ShopLibrary.Context;
 using ShopUI.Core.MVVM;
-using ShopUI.Services.Interfaces;
-using System.Collections.ObjectModel;
+
 
 namespace ShopUI.Modules.NotificationTools.ViewModels
 {
@@ -10,24 +12,32 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
     /// </summary>
     internal class ConnectionInfoDialogViewModel:DialogViewModel
     {
-        private readonly IRepositoryManager _repositoryManager;
-        public ConnectionInfoDialogViewModel(IRepositoryManager repositoryManager)
+        private readonly ShopAppDB _db;
+                
+        public ConnectionInfoDialogViewModel(ShopAppDB db)
         {
-            _repositoryManager = repositoryManager;
+            _db = db;
         }
 
-        private ObservableCollection<object> _repositories;
+        /// <summary>
+        /// Значение строки подключения
+        /// </summary>
+        public string ConnectionString => _db.Database.GetDbConnection().ConnectionString;
 
-        public ObservableCollection<object> Repositories
+        /// <summary>
+        /// Состояние соединения
+        /// </summary>
+        public string ConnectionState => _db.Database.GetDbConnection().State.ToString();
+
+        private DelegateCommand _closeCommand;
+
+        public DelegateCommand CloseCommand =>
+           _closeCommand ??= _closeCommand = new(ExecuteCloseCommand);
+        void ExecuteCloseCommand()
         {
-            get { return _repositories; }
-            set { SetProperty(ref _repositories, value); }
+            RaiseRequestClose(new DialogResult(ButtonResult.OK));
         }
 
-        public override void OnDialogOpened(IDialogParameters parameters) //todo переделать
-        {
-            Repositories = new ObservableCollection<object>(_repositoryManager.Repositories);
-        }
 
     }
 }

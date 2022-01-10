@@ -12,6 +12,13 @@ namespace ShopLibrary.Context
         {
             this.connectionStringSettings = connectionStringSettings??throw new ArgumentNullException(nameof(connectionStringSettings));
         }
+
+        /// <summary>
+        /// Возвращает контекст подключения к источнику данных
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public ShopAppDB CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ShopAppDB>();

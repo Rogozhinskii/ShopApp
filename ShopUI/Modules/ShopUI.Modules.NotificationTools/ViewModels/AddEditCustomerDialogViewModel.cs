@@ -11,17 +11,18 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
     /// </summary>
     public class AddEditCustomerDialogViewModel:DialogViewModel
     {
-       
-        private Customer _currentCustomer;
 
-        /// <summary>
-        /// Текущий редактируемый покупатель
-        /// </summary>
-        public Customer CurrentCustomer
-        {
-            get { return _currentCustomer; }
-            set { SetProperty(ref _currentCustomer, value); }
-        }
+        private Customer _originalCustomer;
+
+        public string Name { get=>GetValue(_originalCustomer?.Name); set=>SetValue(value); }
+        public string Surname { get=>GetValue(_originalCustomer?.Surname); set=> SetValue(value); }
+        public string Patronymic { get=>GetValue(_originalCustomer?.Patronymic); set=> SetValue(value); }
+        public string Email { get=>GetValue(_originalCustomer?.Email); set=> SetValue(value); }
+        public string PhoneNumber { get=>GetValue(_originalCustomer?.PhoneNumber); set=> SetValue(value); }
+
+        
+        #region
+
 
         private DelegateCommand _saveChangesCommand;
         /// <summary>
@@ -31,6 +32,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
            _saveChangesCommand ??= _saveChangesCommand = new(ExecuteSaveChangesCommand);
         void ExecuteSaveChangesCommand()
         {
+            SaveChanges(_originalCustomer);
             DialogResult dialogResult = new(ButtonResult.OK);            
             RaiseRequestClose(dialogResult);
         }
@@ -43,17 +45,22 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         public DelegateCommand CancelCommand =>
            _cancelCommand ??= _cancelCommand = new(ExecuteCancelCommand);
         void ExecuteCancelCommand()
-        {
+        {   
+            CancelChanges();            
             var result = new DialogResult(ButtonResult.Cancel);
-            RaiseRequestClose(result);
-           
+            RaiseRequestClose(result);           
         }
-
+        #endregion
         public override void OnDialogOpened(IDialogParameters parameters)
         {
-            CurrentCustomer=parameters.GetValue<Customer>(CommonTypesPrism.CustomerParam);            
+            _originalCustomer = parameters.GetValue<Customer>(CommonTypesPrism.CustomerParam); 
+            var type=this.GetType();
+            var props=type.GetProperties();
+            foreach (var item in props)
+            {
+                RaisePropertyChanged(item.Name);
+            }
         }
-
 
     }
 }

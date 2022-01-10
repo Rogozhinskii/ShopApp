@@ -6,13 +6,10 @@ using ShopLibrary.Entityes;
 using ShopLibrary.Interfaces;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
-using ShopUI.Services;
-using ShopUI.Services.Interfaces;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -34,56 +31,16 @@ namespace ShopUI.Modules.Customers.ViewModels
             _dialogService = dialogService;           
             _eventAggregator = eventAggregator;
             _productRepository = productsRepository;            
-            _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Subscribe(OnSelectedCustomerChangedAsync);
-            //_eventAggregator.GetEvent<OnCustomerDeleted>().Subscribe(async (obj) => await OnCustomerDeleted(obj));
-            //_eventAggregator.GetEvent<OnCustomerEdited>().Subscribe(async (obj) => await OnCustomerEdited(obj));
-
+            _eventAggregator.GetEvent<OnSelectedCustomerChanged>().Subscribe(OnSelectedCustomerChangedAsync);            
+            _eventAggregator.GetEvent<OnCustomerEdited>().Subscribe(OnCustomerEdited);
             _productsViewSourse = new CollectionViewSource();
         }
 
-
-        #region to delete
-        private async Task OnCustomerEdited(Customer obj)
+        private void OnCustomerEdited()
         {
-            if (obj == null) return;
-            try
-            {
-                Products.ToList().ForEach(p => p.Email = obj.Email);
-                //var updateResult = await _productRepository.UpdateMany(Products); //обновляем email
-                sourseUpdateEvent.Invoke(this, new EventArgs());
-            }
-            catch (Exception ex)
-            {
-                ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);
-
-            }
+            _productsViewSourse.View.Refresh();
         }
-
-        /// <summary>
-        /// при удалении покупателя удаляются все его хранящиеся покупки
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        private async Task OnCustomerDeleted(Customer obj)
-        {
-            if (obj == null) return;
-            var parameters = new DialogParameters();
-            try
-            {
-                //var deleteResult = await _productRepository.Delete(x => x.Email == obj.Email);
-                //if (deleteResult)
-                //{
-                //    ShowNotificationDialog(DialogType.NotificationDialog, "Записи удалены");
-                //}
-            }
-            catch (Exception ex)
-            {
-                ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);
-            }
-
-
-        }
-        #endregion
+       
 
         public ICollectionView ProductsView => _productsViewSourse?.View;
         public CollectionViewSource _productsViewSourse;
@@ -96,6 +53,7 @@ namespace ShopUI.Modules.Customers.ViewModels
         /// <returns></returns>
         private void OnSelectedCustomerChangedAsync(Customer obj)
         {
+            if(obj is null) return;
             _productsOwner=obj;            
             Products=obj.Products.ToObservableCollection();            
         }
@@ -130,47 +88,49 @@ namespace ShopUI.Modules.Customers.ViewModels
             var firstSelectedItem = (obj as ObservableCollection<object>).Cast<Product>().FirstOrDefault();
             if (firstSelectedItem != null)
             {
-                DialogParameters parameters = new();
-                parameters.Add(CommonTypesPrism.EditableRecord, firstSelectedItem);
+                DialogParameters parameters = new()
+                {
+                    { CommonTypesPrism.EditableRecord, firstSelectedItem }
+                };               
                 _dialogService.Show(CommonTypesPrism.AddEditDialog, parameters, async result =>
                 {
-                    var editableRecord = result.Parameters.GetValue<Product>(CommonTypesPrism.EditableRecord);
-                    if (editableRecord is null || editableRecord.Equals(firstSelectedItem)) return;
-                    //var updateResult = await _productRepository.Update(editableRecord);
-                    //if (updateResult)
-                    //{
-                    //    var index = Products.IndexOf(Products.Where(i => i.Id == editableRecord.Id).FirstOrDefault());
-                    //    Products.RemoveAt(index);
-                    //    Products.Insert(index, editableRecord);
-                    //    sourseUpdateEvent.Invoke(this, new EventArgs());
-                    //}
+                    if (result.Result != ButtonResult.OK) return;
+                    await _productRepository.UpdateAsync(firstSelectedItem);
+                    _productsViewSourse.View.Refresh();                   
                 });
 
 
             }
 
         }
+
+        #region DelegateCommand<object> DeleteRecordCommand - удаление продукта
         private DelegateCommand<object> _deleteRecordCommand;
         /// <summary>
         /// удаляет запись с продуктом
         /// </summary>
         public DelegateCommand<object> DeleteRecordCommand =>
-           _deleteRecordCommand ??= _deleteRecordCommand = new DelegateCommand<object>(async (obj) => await ExecuteDeleteRecordCommand(obj));
+           _deleteRecordCommand ??= _deleteRecordCommand = new DelegateCommand<object>(ExecuteDeleteRecordCommand);
 
-        private async Task ExecuteDeleteRecordCommand(object obj)
+        private void ExecuteDeleteRecordCommand(object obj)
         {
             _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);
             var itemList = (obj as ObservableCollection<object>).Cast<Product>().ToList();
-            
-            foreach (var item in itemList)
+            var msg = $"Вы уверены, что хотите удалить {itemList.Count} записей?";
+            var parameters = new DialogParameters{
+                { CommonTypesPrism.DialogMessage, msg }
+            };
+            _dialogService.Show(CommonTypesPrism.NotificationDialog, parameters, async r =>
             {
-                //var result = await _productRepository.Delete(item);
-                //if (result) Products.Remove(item);
-            }
+                if (r.Result != ButtonResult.OK) return;
+                await _productRepository.RemoveRangeAsync(itemList);
+                Products.RemoveRange(itemList);
+            });
             _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
         }
+        #endregion
 
-
+        #region DelegateCommand AddNewProduct добавление нового продукта
         private DelegateCommand _addNewProduct;
         /// <summary>
         /// Добавляет новую запись с продуктом
@@ -180,20 +140,21 @@ namespace ShopUI.Modules.Customers.ViewModels
 
         void ExecuteAddNewProduct()
         {
-            var parameter = new DialogParameters();
-            parameter.Add(CommonTypesPrism.EmailParam, _productsOwner.Email);
-
+            var newProduct = new Product { Customer = _productsOwner};
+            var parameter = new DialogParameters
+            {
+                { CommonTypesPrism.EditableRecord, newProduct }
+            };
             _dialogService.Show(CommonTypesPrism.AddEditDialog, parameter, async result =>
             {
-                var newRecord = result.Parameters.GetValue<Product>(CommonTypesPrism.EditableRecord);
-                if (newRecord is null) return;
-                //int newRecordId = await _productRepository.Insert(newRecord);
-                //newRecord.Id= newRecordId;
-                //if (newRecordId>0) Products.Add(newRecord);
-                sourseUpdateEvent.Invoke(this, new EventArgs());
+                if (result.Result != ButtonResult.OK) return;
+                Products.Add(await _productRepository.AddAsync(newProduct));
             });
 
         }
+        #endregion
+
+
 
     }
 }
