@@ -28,7 +28,7 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         /// <summary>
         /// Максимальное количество попыток входа до закрытия приложения
         /// </summary>
-        private static int _maxLoginAttemptCount=2;
+        private static readonly int _maxLoginAttemptCount=2;
 
 
         public AuthenticationDialogViewModel(IAuthenticationService autenticationService,IEventAggregator eventAggregator,IDialogService dialogService)
@@ -81,35 +81,47 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         {            
             bool isSignedIf = false;
             if (!isSignedIf)
-            { 
-                if (_currentLoginAttemptCount < _maxLoginAttemptCount)
+            {
+                try
                 {
-                    try
+                    if (_currentLoginAttemptCount < _maxLoginAttemptCount)
                     {
-                        _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);                        
+                        _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Visible);
                         if (UserName is null || Password is null) { _currentLoginAttemptCount++; return; };
                         isSignedIf = await _autenticationService.LogInAsync(UserName, Password);
                         _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
-                        if (!isSignedIf)
+                        if (isSignedIf)
                         {
-                            UserName = string.Empty;
-                            Password = null;
-                            ShowLoginFailedMessage();
-                            _currentLoginAttemptCount++;
-                            return;
+                            DialogResult result = new(ButtonResult.OK);
+                            result.Parameters.Add(CommonTypesPrism.logInResult, isSignedIf);
+                            RaiseRequestClose(result);
                         }
+                        else return;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        ShowNotificationDialog(DialogType.ErrorDialog, ex.Message);                        
+                        DialogResult result = new(ButtonResult.Abort);
+                        result.Parameters.Add(CommonTypesPrism.logInResult, isSignedIf);
+                        RaiseRequestClose(result);
                     }
-                                  
+                }
+                catch (Exception ex)
+                {
+                    _eventAggregator.GetEvent<OnLongOperationEvent>().Publish(Visibility.Hidden);
+                    _currentLoginAttemptCount++;
+                    RejectInputData();
+                    ShowNotificationDialog(DialogType.ErrorDialog, $"{ex.Message}. InnerException: {ex.InnerException?.Message}");
                 }
             }
-            DialogResult result = new DialogResult(ButtonResult.OK);
-            result.Parameters.Add(CommonTypesPrism.logInResult, isSignedIf);            
-            RaiseRequestClose(result);           
-        }       
+                       
+        }   
+        
+
+        private void RejectInputData()
+        {
+            UserName = string.Empty;
+            Password = null;
+        }
 
         private DelegateCommand _registerUserCommand;
         /// <summary>
@@ -149,16 +161,6 @@ namespace ShopUI.Modules.NotificationTools.ViewModels
         {            
             Password = ((PasswordBox)obj).SecurePassword;
             Password.MakeReadOnly();
-        }
-
-        private void ShowLoginFailedMessage()
-        {
-            Task.Run(async () =>
-            {
-                Message = "Не верный логин или пароль!";
-                await Task.Delay(5000);
-                Message = string.Empty;
-            });
         }
 
        

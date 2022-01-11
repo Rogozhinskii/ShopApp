@@ -2,7 +2,7 @@
 
 namespace ShopUI.Core.interfaces
 {
-    public interface NotificationDialog
+    public interface INotificationDialog
     {
         /// <summary>
         /// Показывает соответвующее DialogType диалоговое окно, принимает отображаемое сообщение

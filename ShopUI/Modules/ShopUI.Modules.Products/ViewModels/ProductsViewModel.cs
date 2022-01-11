@@ -6,7 +6,6 @@ using ShopLibrary.Entityes;
 using ShopLibrary.Interfaces;
 using ShopUI.Core;
 using ShopUI.Core.MVVM;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -21,10 +20,7 @@ namespace ShopUI.Modules.Customers.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IRepository<Product> _productRepository;
 
-        /// <summary>
-        /// событие для обновления данных в гриде
-        /// </summary>
-        public event EventHandler sourseUpdateEvent;
+       
         private Customer _productsOwner;
         public ProductsViewModel(IRepository<Product> productsRepository, IDialogService dialogService,IEventAggregator eventAggregator)
         {            

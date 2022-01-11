@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace ShopUI.Core.MVVM
 {
-    public class DialogViewModel : BindableBase, IDialogAware, NotificationDialog
+    public class DialogViewModel : BindableBase, IDialogAware, INotificationDialog
     {
         public virtual string Title => "";
         protected IDialogService _dialogService;

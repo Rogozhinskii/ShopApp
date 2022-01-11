@@ -32,7 +32,7 @@ namespace ShopLibrary.Authentication
                 Salt = saltText,
                 SaltedHashedPassword = saltedhashedPassword,
             };
-            var insertResult=await _usersRepository.AddAsync(newUser);
+            var insertResult=await _usersRepository.AddAsync(newUser,token);
             if (insertResult != null)
                 return true;
             return false;
@@ -40,8 +40,8 @@ namespace ShopLibrary.Authentication
 
         public async Task<bool> LogInAsync(string userName,SecureString password, CancellationToken token=default)
         {
-            var user = await _usersRepository.Items.FirstOrDefaultAsync(x => x.Name == userName, token).ConfigureAwait(false);
-            if (user is null) return false;
+            var user = await _usersRepository.Items.FirstOrDefaultAsync(x => x.Name == userName, token).ConfigureAwait(false) 
+                ?? throw new InvalidOperationException("Пользователь с таким именем или паролем не найдет");            
             var saltedhashedPassword = SaltAndHashPassword(password, user.Salt);
             return saltedhashedPassword == user.SaltedHashedPassword;
         }

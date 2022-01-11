@@ -26,6 +26,7 @@ namespace ShopUI
         private IDialogService _dialogService;
         protected override Window CreateShell()
         {
+            _dialogService=Container.Resolve<IDialogService>();
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             return Container.Resolve<MainWindow>();
         }

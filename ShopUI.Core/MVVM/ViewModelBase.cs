@@ -5,7 +5,7 @@ using ShopUI.Core.interfaces;
 
 namespace ShopUI.Core.MVVM
 {
-    public class ViewModelBase : BindableBase, INavigationAware, IConfirmNavigationRequest, NotificationDialog
+    public class ViewModelBase : BindableBase, INavigationAware, IConfirmNavigationRequest, INotificationDialog
     {
         /// <summary>
         /// Сервис для открытия диалоговых окон
@@ -25,8 +25,10 @@ namespace ShopUI.Core.MVVM
                 
         public void ShowNotificationDialog(DialogType dialogType, string message)
         {
-            var parameters = new DialogParameters();
-            parameters.Add(CommonTypesPrism.DialogMessage, message);
+            var parameters = new DialogParameters
+            {
+                { CommonTypesPrism.DialogMessage, message }
+            };
 
             switch (dialogType)
             {
